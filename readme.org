@@ -10,14 +10,18 @@
       =libWSTP64i4.so=, which is described below), unicode support is incorporated since interface 4. If your Mathematica
       doesn't support interface 4 and you do want to use it. Modify all =*UTF8String*= to be =*ByteString*= may
       make it work.
-   2. put this repo under =${TEXMACS_HOME_PATH}/plugins= and name it =mma=
+   2. Confirm =math= is in =PATH=, which is one executable binaries of Mathematica kernel.
+   3. put this repo under =${TEXMACS_HOME_PATH}/plugins= and name it =mma=, which is usually =~/.TeXmacs/plugins/mma=
       (this is essential, since the package is named =mma=)
-   3. Find your directory of Mathematica library and make it =WSTP_PATH= variable in =Makefile=. See =Makefile= for details.
+   4. Find your directory of Mathematica compilation additions for WSTP and make it =WSTP_PATH= variable in =Makefile=.
+      See =Makefile= for details.
 
 
    PS: This plugin is tested under *ArchLinux*, under other Linux distros it most likely works as well. Mac user may
    need to do a little hacking in =Makefile=. For I'm not familiar with Windows, Windows users may need to do some
    work by hand. Pull requests is welcome.
+
+   PS2: I'm actually not familiar with C++, so if I wrote some shit code, don't pour scorn on me :).
 
 ** How it is implemented?
 
