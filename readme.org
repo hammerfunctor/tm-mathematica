@@ -16,6 +16,13 @@
       (this is essential, since the package is named =mma=)
    4. Find your directory of Mathematica compilation additions for WSTP and make it =WSTP_PATH= variable in =Makefile=.
       See =Makefile= for details.
+   5. In root directory of this repo, do =make=.
+   #+begin_src
+     # pepper in ~/.TeXmacs/plugins/mma on git:main o [19:34:43]
+     $ make
+     g++ -m64 -o bin/tm_mma.bin src/tm_mathematica_wstp.cxx -I/usr/local/Wolfram/Mathematica/12.3/SystemFiles/Links/WSTP/DeveloperKit/Linux-x86-64/CompilerAdditions -L/usr/local/Wolfram/Mathematica/12.3/SystemFiles/Links/WSTP/DeveloperKit/Linux-x86-64/CompilerAdditions -Wl,-rpath,/usr/local/Wolfram/Mathematica/12.3/SystemFiles/Links/WSTP/DeveloperKit/Linux-x86-64/CompilerAdditions -lWSTP64i4 -lm -lrt -ldl -luuid  -Wl,--gc-sections -lpthread
+   #+end_src
+   then next time you open TeXmacs, this plugin will be available.
 
 
    PS: This plugin is tested under *ArchLinux*, under other Linux distros it most likely works as well. Mac user may
