@@ -30,7 +30,8 @@
 
    Transformation of data is mostly done in Mathematica end, and I just wrote a =Switch= to format the data to string.
    Then do recognize the returned string as: latex segment string, EPS string (=ExportString[g,"EPS"]=),
-   plain string, error message string or symbol string. Graphics are displayed by postscript, for now only
+   plain string, error message string or symbol string. Graphics are displayed via postscript
+   (return =\2ps:<postscript string>\5= to standard output), for now only
    Mathematica object with head =Graphics= or =Graphics3D= are regarded as graphics and correctly converted.
    If you find other types worth handling, hack it!
 
@@ -57,6 +58,6 @@
    + =INPUTPKT= is also redundent for a session in tm documents.
 
 
-   I have to struggle to find a gradute school, so issues and pull requests may not be replied in time.
+   I have to struggle to find a graduate school, so issues and pull requests may not be replied in time.
 
 ** Have fun!
