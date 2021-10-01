@@ -1,6 +1,7 @@
 * A Mathematica plugin for TeXmacs
 
-  Use TeXmacs as the frontend of everything!
+  #+CAPTION: Use TeXmacs as the frontend of everything!
+  [[./demo.png]]
 
 ** Installation and Use
 
@@ -38,6 +39,7 @@
    From the newest Mathematica docs (basically =tutorial/RunningTheWolframSystemFromWithinAnExternalProgram= in reference),
    the types of Wolfram Language packets returned by =WSNextpacket= consist of:
 
+   #+CAPTION: packets returned by Wolfram kernel
    | Wolfram Language Packet    | constant      | meaning                                             |
    |----------------------------+---------------+-----------------------------------------------------|
    | ReturnPacket[expr]         | RETURNPKT     | result from a computation                           |
