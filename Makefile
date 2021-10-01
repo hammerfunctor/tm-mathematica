@@ -19,8 +19,11 @@ endif
 
 all: bin/tm_mma.bin
 
-bin/tm_mma.bin: src/tm_mathematica_wstp.cxx
+bin/tm_mma.bin: src/tm_mathematica_wstp.cxx | bin
 	${CXX} -m64 -o $@ $< $(CXXFLAGS)
+
+bin:
+	mkdir -p bin
 
 clean:
 	rm bin/tm_mma.bin
