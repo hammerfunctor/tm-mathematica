@@ -16,10 +16,11 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <fstream>
 
-#define DEBUG 0
-#define TEST 0
-#define LOG 0
+#define LOG_INPUTEXPR 0
+#define LOG_PKT 0
+#define LOG_RETURNSTRING 0
 
 constexpr auto seg1 =
 "With[{tmp=(";
@@ -107,7 +108,7 @@ public:
     std::ostringstream mathin;
     mathin << seg1 << s << seg3 << seg4_epshead << seg5;
 
-#if DEBUG
+#if LOG_INPUTEXPR
     std::cerr << mathin.str() << std::endl;
 #endif
 
@@ -119,7 +120,11 @@ public:
     int pkt = INPUTNAMEPKT;
 
     // for one input, we only need to wrap output in a single `latex`
+#if LOG_RETURNSTRING
+    std::cout << "\2verbatim:";
+#else
     std::cout << "\2latex:";
+#endif
   
     // WSReady returns false if the link is just preparing, use it carefully
     while ( (pkt!=RETURNPKT) && (pkt=WSNextPacket(lp)) ) { // go on if last loop didn't return RETURNPKT
@@ -162,29 +167,35 @@ public:
     int elem, length, numchar;
     const unsigned char *result;
 
-#if LOG
+#if LOG_PKT
     std::cerr << "\nTEXTPKT: "; std::cout.flush();
 #endif
 
     switch ( (elem=WSGetNext(lp)) ) {
 
     case WSTKSTR:
-#if LOG
+#if LOG_PKT
       std::cerr << "WSTKSTR" << std::endl;
 #endif
+
+      //WSGetByteString(lp, &result, &length, 0);
       WSGetUTF8String(lp, &result, &length, &numchar);
 
       if ( !ismsg ) {
         // handle non-message text output
         std::cout << "$\\displaystyle " << result << "$";
 
+
       } else {
         // handle message text output
         std::cout << "\\magenta Message:\2verbatim:\n"
                   << result << "\n\5" << "\\magenta Message end.";
+//#if DEBUG
+//#endif
       }
 
       WSReleaseUTF8String(lp, result, length);
+      //WSReleaseByteString(lp, result, length);
       break;
 
     default:
@@ -197,14 +208,14 @@ public:
     int elem, length, numchar;
     const unsigned char *result;
 
-#if LOG
+#if LOG_PKT
     std::cerr << "RETURNPKT: "; std::cout.flush();
 #endif
 
     switch ( (elem=WSGetNext(lp)) ) {
 
     case WSTKSTR:
-#if LOG
+#if LOG_PKT
       std::cerr << "WSTKSTR" << std::endl;
 #endif
 
@@ -223,7 +234,7 @@ public:
       break;
 
     case WSTKSYM:
-#if LOG
+#if LOG_PKT
       std::cerr << "WSTKSYM" << std::endl;
 #endif
 
@@ -248,85 +259,9 @@ public:
   }
 };
 
-//======================================= for test
-// Some legacy codes for test
-
-void enter_string_as_expr(WSLINK lp, const char *s) {
-  WSPutFunction(lp, "EvaluatePacket", 1L);
-  WSPutFunction(lp, "ToExpression", 1L);
-  WSPutString(lp, s);
-  WSEndPacket(lp);
-  WSFlush(lp);
-}
-
-void enter_string_with_ctx(WSLINK lp, const char *s) {
-  std::ostringstream mathin;
-  mathin << seg1 << s << seg3 << seg4_epshead << seg5;
-#if DEBUG
-  std::cerr << mathin.str() << std::endl;
-#endif
-  enter_string_as_expr(lp, mathin.str().c_str());
-}
-
-void read_link(WSLINK link) {
-  const unsigned char *out;
-  int elem, length, numchar;
-
-  switch ( elem=WSGetNext(link)) {
-  case WSTKSTR:
-    WSGetUTF8String(link, &out, &length, &numchar);
-    std::cout << "String: " << out << std::endl;
-    WSReleaseUTF8String(link, out, length);
-    break;
-  case WSTKSYM:
-    WSGetUTF8Symbol(link, &out, &length, &numchar);
-    std::cout << "Symbol: " << out <<std::endl;
-    WSReleaseUTF8Symbol(link, out, length);
-    break;
-  case WSTKERROR:
-    std::cout << "ERROR!" << std::endl;
-    break;
-  case WSTKFUNC:
-    std::cout << "FUNC~" << std::endl;
-    break;
-  default:
-    std::cout << "default -> " << elem << std::endl;
-    break;
-  }
-}
-
-int main_test(void) {
-  WSENV env = (WSENV)0;
-  WSLINK link = (WSLINK)0;
-
-  int pkt, err;
-
-  WSInitialize(env);
-  WSOpenString(env, "-linkname \"math -wstp\"", &err);
-
-  enter_string_with_ctx(link, "Sin[x] x^(2a)");
-
-  while ( (pkt=WSNextPacket(link)) && (pkt!=RETURNPKT) && (pkt!=TEXTPKT) ) {
-    WSNewPacket(link);
-  }
-
-  read_link(link);
-
-  WSPutFunction(link, "Exit", 0L);
-  return 0;
-}
-
-//======================================= end
-
 int main(int argc, char *argv[]) {
   size_t InNum = 1;
   std::string input;
-
-#if TEST
-  WSPutFunction(link, "Exit", 0L);
-  main_test();
-  return 0;
-#endif
 
   WSSession session;
 
