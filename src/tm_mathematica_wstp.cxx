@@ -12,6 +12,7 @@
 
 #include "wstp.h"
 
+#include <cstddef>
 #include <cstring>
 #include <iostream>
 #include <sstream>
@@ -50,6 +51,23 @@ constexpr auto seg5 =
  * If you find any other Head or symbols worth handling, don't hesitate
  * to make pull requests.
  */
+
+
+// when output a lot of characters, the kernel insert segments of a special string,
+// which need to removing.
+void filter(const unsigned char* s) {
+  size_t shift = 0;
+  char c;
+  const char* wierd = "\\\n \n>   ";
+
+  for(; (c=*(s+shift)) != '\0'; shift++) {
+    if ( (c=='\\') && (!memcmp(wierd, s+shift, 8)) ) {
+      shift += 7;
+    } else {
+      std::cout << c;
+    }
+  }
+}
 
 //=========================== main class
 class WSSession {
@@ -156,7 +174,7 @@ public:
         }
 
         //post
-        std::cout << "\n\n";
+        //std::cout << "\n\n";
       }
       WSNewPacket(lp);
     }
@@ -166,6 +184,7 @@ public:
   void handle_text_pkt(int ismsg) {
     int elem, length, numchar;
     const unsigned char *result;
+    //std::ofstream logfile;
 
 #if LOG_PKT
     std::cerr << "\nTEXTPKT: "; std::cout.flush();
@@ -183,7 +202,13 @@ public:
 
       if ( !ismsg ) {
         // handle non-message text output
-        std::cout << "$\\displaystyle " << result << "$";
+        //std::cout << "$\\displaystyle " << result << "$";
+        //logfile.open("log.txt"); logfile << result; logfile.close();
+        std::cout << "\\magenta Output=\\black $\\displaystyle ";
+        // when output a lot of characters, the kernel insert segments of a special string,
+        // which need to removing.
+        filter(result);
+        std::cout << "$";
 
 
       } else {
