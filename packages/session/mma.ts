@@ -1,10 +1,10 @@
-<TeXmacs|1.0.7.20>
+<TeXmacs|2.1>
 
 <style|source>
 
 <\body>
   <active*|<\src-title>
-    <src-package|mathematica|1.0>
+    <src-package|mma|1.0>
 
     <\src-purpose>
       Markup for Mathematica sessions.
@@ -20,7 +20,7 @@
     </src-license>
   </src-title>>
 
-  <assign|mathematica-output|<\macro|body>
+  <assign|mma-output|<\macro|body>
     <\padded>
       <generic-output*|<arg|body>>
     </padded>
@@ -31,12 +31,10 @@
   <assign|Mfunction|<macro|name|<arg|name>>>
 
   <assign|Muserfunction|<macro|name|<arg|name>>>
-
-  \;
 </body>
 
 <\initial>
   <\collection>
-    <associate|preamble|true>
+    <associate|page-medium|paper>
   </collection>
 </initial>
