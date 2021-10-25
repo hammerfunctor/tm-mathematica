@@ -31,7 +31,7 @@ constexpr auto seg3 =
   "Switch[tmp,";
 constexpr auto seg4_epshead =
     "_Graphics|_Graphics3D," "ExportString[tmp,\"EPS\"],";
-constexpr auto seg5 = 
+constexpr auto seg5 =
     "_String,tmp,"
     "$Failed,$Failed,"
     "Null,Null,"
@@ -76,6 +76,10 @@ private:
   WSENV ep;
   WSLINK lp;
 
+  constexpr static char DATA_BEGIN = ((char) 2);
+  constexpr static char DATA_END = ((char) 5);
+  constexpr static char DATA_ESCAPE = ((char) 27);
+
   void error(void)
   {
     if( WSError(lp) ) {
@@ -84,6 +88,28 @@ private:
       std::cerr << "Error detected by this program." << std::endl;
     }
     exit(3);
+  }
+
+
+  void put_latex(const unsigned char* s) {
+    std::cout << DATA_BEGIN << "latex: "
+              << s
+              << DATA_END;
+  }
+  void put_latex(const unsigned char* s, char delim) {
+    std::cout << DATA_BEGIN << "latex: "
+              << delim << s << delim
+              << DATA_END;
+  }
+  void put_ps(const unsigned char* s) {
+    std::cout << DATA_BEGIN
+              << "ps: " << s
+              << DATA_END;
+  }
+  void put_verbatim(const unsigned char* s) {
+    std::cout << DATA_BEGIN << "verbatim: "
+              << s
+              << DATA_END;
   }
 
 public:
@@ -103,7 +129,7 @@ public:
       std::cout << "\2verbatim:\\red Link with WSTP failed\5" << std::endl;
       WSClose(lp);
       exit(2);
-    } 
+    }
   };
 
   ~WSSession()
@@ -143,12 +169,12 @@ public:
 #else
     std::cout << "\2latex:";
 #endif
-  
+
     // WSReady returns false if the link is just preparing, use it carefully
     while ( (pkt!=RETURNPKT) && (pkt=WSNextPacket(lp)) ) { // go on if last loop didn't return RETURNPKT
 
       // if (WSError(lp)) error();
-      
+
       if ( (pkt==TEXTPKT) || (pkt==RETURNPKT) || (pkt==MESSAGEPKT) ) {
 
         switch (pkt) {
