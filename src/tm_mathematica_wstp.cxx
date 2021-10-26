@@ -39,6 +39,13 @@ constexpr auto seg5 =
   "]"
 "]";
 
+constexpr auto preprint =
+  "$PrePrint=Switch[#,"
+    "Graphics|_Graphics3D,ExportString[#,\"EPS\"],"
+    "String,#,"
+    "$Failed,$Failed,"
+    "Null,Null,"
+    "_,TeXForm[#]]&;";
 /*
  * To fetch useful output from Mathematica, there are basically three ways:
  *
@@ -101,7 +108,12 @@ private:
               << delim << s << delim
               << DATA_END;
   }
-  void put_ps(const unsigned char* s) {
+  void put_latex(const unsigned char* s, const char* prefix) {
+    std::cout << DATA_BEGIN << "latex: "
+              << prefix << s
+              << DATA_END;
+  }
+  void put_ps(const unsigned char*) {
     std::cout << DATA_BEGIN
               << "ps: " << s
               << DATA_END;
@@ -111,6 +123,12 @@ private:
               << s
               << DATA_END;
   }
+  void put_prompt(const unsigned char* s) {
+    std::cout << DATA_BEGIN << "prompt#\\pink "
+              << s << "{}"
+              << DATA_END;
+  }
+
 
 public:
   WSSession()
@@ -140,9 +158,16 @@ public:
 
   void enter_string(const char *s)
   {
-    WSPutFunction(lp, "EvaluatePacket", 1L);
+    //WSPutFunction(lp, "EvaluatePacket", 1L);
       WSPutFunction(lp, "ToExpression", 1L);
         WSPutString(lp, s);
+    WSEndPacket(lp);
+    WSFlush(lp);
+  }
+
+  void enter_string_new(const char* s) {
+    WSPutFunction(lp, "EnterTextPacket", 1L);
+    WSPutString(lp, s);
     WSEndPacket(lp);
     WSFlush(lp);
   }
@@ -158,6 +183,91 @@ public:
 
     enter_string(mathin.str().c_str());
   }
+
+  void output_to_screen() {
+    int order = 1, length, numofchar;
+    int pkt = OUTPUTNAMEPKT;
+    const unsigned char* result;
+
+    std::cout << "\2verbatim:";
+    // embed outputs within a single `verbatim' env
+
+    while ( (pkt!=INPUTNAMEPKT) && (pkt=WSNextPacket(lp)) ) {
+      if (order!=1) { std::cout << '\n'; }
+
+      switch (pkt) {
+      case INPUTNAMEPKT:
+        WSGetUTF8String(lp, &result, &length, &numofchar);
+        put_prompt(result);
+        WSReleaseUTF8String(lp, result, length);
+        break;
+      case OUTPUTNAMEPKT:
+        WSGetUTF8String(lp, &result, &length, &numofchar);
+        put_latex(result, "\\magenta ");
+        WSReleaseUTF8String(lp, result, length);
+        break;
+      case RETURNTEXTPKT:
+        handle_returntextpkt();
+        break;
+
+      default:
+        break;
+      }
+
+      order++;
+    }
+    std::cout << "\5";
+  }
+  void handle_returntextpkt() {
+    int elem, length, numofchar;
+    const unsigned char* result;
+
+    switch ( (elem=WSGetNext(lp)) ) {
+
+    case WSTKSTR:
+      WSGetUTF8String(lp, &result, &length, &numofchar);
+
+      if ( ! memcmp("%!PS", result, 4) ){
+        // PS
+        std::cout << "\2ps:" << result << "\5";
+
+      } else {
+        // string
+        std::cout << "\2verbatim: " << result << "\5";
+      }
+
+      WSReleaseUTF8String(lp, result, length);
+      break;
+
+    case WSTKSYM:
+      WSGetUTF8String(lp, &result, &length, &numofchar);
+
+      if ( ! (memcmp("$Failed", result, 7)) ) {
+        // handle Symbol: $Failed
+        put_verbatim((const unsigned char*)"$Failed");
+      } else if ( ! (memcmp("Null", result, 4)) ) {
+        // ignore Symbol: Null
+      } else {
+        // Unexpected symbol
+        put_latex((const unsigned char*)"\\red Unexpected symbol returned:");
+        // TODO: fix it.
+
+        //std::cout << "\\red \2verbatim: Unexpected symbol returned: "
+        //          << result << "\5";
+      }
+      WSReleaseUTF8String(lp, result, length);
+      break;
+
+    default:
+      std::cout << "\\red Unknown data from RETURNPKT: " << elem;
+    }
+}
+  void set_preprint() {
+    WSPutFunction(lp, "ToExpression", 1L);
+    WSPutString(lp, preprint);
+    WSEndPacket(lp);
+    WSFlush(lp);
+}
 
   void read_string_to_screen()
   {
