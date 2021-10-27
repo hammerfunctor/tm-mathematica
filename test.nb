@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     23260,        502]
-NotebookOptionsPosition[     21175,        461]
-NotebookOutlinePosition[     21622,        478]
-CellTagsIndexPosition[     21579,        475]
+NotebookDataLength[     52668,       1222]
+NotebookOptionsPosition[     49781,       1166]
+NotebookOutlinePosition[     50231,       1183]
+CellTagsIndexPosition[     50188,       1180]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -23,7 +23,8 @@ Cell[CellGroupData[{
 Cell[BoxData[
  RowBox[{"link", "=", 
   RowBox[{"LinkLaunch", "[", "\"\<math -swtp\>\"", "]"}]}]], "Input",
- CellChangeTimes->{{3.844237018006534*^9, 3.8442370686298857`*^9}},
+ CellChangeTimes->{{3.844237018006534*^9, 3.8442370686298857`*^9}, {
+  3.844251777542942*^9, 3.844251778305282*^9}},
  CellLabel->"In[1]:=",ExpressionUUID->"0974bb40-b3bb-4e18-b092-e4f4a9f27126"],
 
 Cell[BoxData[
@@ -267,13 +268,14 @@ GzMvKcH1o4cXABG3d/Y=
        Dynamic[Typeset`open$$], ImageSize -> Automatic]},
      "SummaryPanel"],
     DynamicModuleValues:>{}], "]"}],
-  LinkObject["math -swtp", 82, 7],
+  LinkObject["math -swtp", 83, 7],
   Editable->False,
   SelectWithContents->True,
   Selectable->False]], "Output",
  CellChangeTimes->{3.844237071505183*^9, 3.844237565994672*^9, 
-  3.844238068238576*^9, 3.844240163226585*^9, 3.844240420556819*^9},
- CellLabel->"Out[1]=",ExpressionUUID->"9bcb02d2-aedf-47c7-9b07-29e37343d81f"]
+  3.844238068238576*^9, 3.844240163226585*^9, 3.844240420556819*^9, 
+  3.844249838053071*^9, 3.844251782091161*^9},
+ CellLabel->"Out[1]=",ExpressionUUID->"b50e2411-5ab4-49b6-ba71-3fca114d01a5"]
 }, Open  ]],
 
 Cell[BoxData[
@@ -304,30 +306,26 @@ Cell[BoxData[
  CellChangeTimes->{{3.844237012138012*^9, 3.8442370146148243`*^9}, {
   3.8442370768695183`*^9, 3.844237079997651*^9}, {3.8442372302772207`*^9, 
   3.844237264733322*^9}, {3.844238122670624*^9, 3.8442381241011763`*^9}},
- CellLabel->"In[15]:=",ExpressionUUID->"e4510cd3-8dbb-494e-bb17-ac4e5c37d68e"],
+ CellLabel->"In[13]:=",ExpressionUUID->"e4510cd3-8dbb-494e-bb17-ac4e5c37d68e"],
 
 Cell[BoxData[
  TagBox[GridBox[{
     {
-     RowBox[{"OutputNamePacket", "[", "\<\"Out[4]= \"\>", "]"}]},
-    {
-     RowBox[{"ReturnTextPacket", "[", "\<\"\\\\sin (x)\"\>", "]"}]},
+     RowBox[{"TextPacket", "[", "\<\"\\\\sin (x)\\n\"\>", "]"}]},
     {
      RowBox[{"OutputNamePacket", "[", "\<\"Out[5]= \"\>", "]"}]},
     {
-     RowBox[{"ReturnTextPacket", "[", "\<\"$Failed\"\>", "]"}]},
+     RowBox[{"ReturnTextPacket", "[", "\<\"Null\"\>", "]"}]},
     {
-     RowBox[{"InputNamePacket", "[", "\<\"In[7]:= \"\>", "]"}]}
+     RowBox[{"InputNamePacket", "[", "\<\"In[6]:= \"\>", "]"}]}
    },
    DefaultBaseStyle->"Column",
    GridBoxAlignment->{"Columns" -> {{Left}}},
    GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
   "Column"]], "Output",
- CellChangeTimes->{{3.844240128350152*^9, 3.844240139028565*^9}, {
-   3.844240174351969*^9, 3.8442402589362097`*^9}, 3.844240380700828*^9, {
-   3.8442404332072477`*^9, 3.844240478679411*^9}, 3.8442413084453278`*^9, 
-   3.844241926821155*^9},
- CellLabel->"Out[15]=",ExpressionUUID->"ad2624a9-7fa8-4de0-aa9f-c74448ca40b3"]
+ CellChangeTimes->{{3.844251796330812*^9, 3.844251811905573*^9}, {
+  3.844252803029008*^9, 3.844252859956235*^9}},
+ CellLabel->"Out[13]=",ExpressionUUID->"c7efbda3-7d72-4f33-83aa-28a0e6386cc1"]
 }, Open  ]],
 
 Cell[BoxData[
@@ -342,7 +340,15 @@ Cell[BoxData[
    3.844240122484199*^9, 3.8442401258408823`*^9}, 3.844240256179533*^9, 
    3.844240448355592*^9, {3.8442419193450603`*^9, 3.844241922725849*^9}, {
    3.844242185927766*^9, 3.844242193869276*^9}},
- CellLabel->"In[16]:=",ExpressionUUID->"9f444b53-4249-4993-99e0-c5fb1bc8fde1"],
+ CellLabel->"In[4]:=",ExpressionUUID->"9f444b53-4249-4993-99e0-c5fb1bc8fde1"],
+
+Cell[BoxData[
+ RowBox[{"LinkWrite", "[", 
+  RowBox[{"link", ",", 
+   RowBox[{"EnterTextPacket", "[", "\"\<Sin[x]\>\"", "]"}]}], "]"}]], "Input",\
+
+ CellChangeTimes->{{3.844252806988449*^9, 3.844252826736199*^9}},
+ CellLabel->"In[12]:=",ExpressionUUID->"725c9554-98db-4e1d-8aed-672df7658b6a"],
 
 Cell[BoxData[
  RowBox[{"LinkWrite", "[", 
@@ -352,10 +358,11 @@ Cell[BoxData[
     "ToExpression", "[", 
      "\"\<$PrePrint=Switch[#,\[IndentingNewLine]_Graphics|_Graphics3D,\
 ExportString[#,\\\"EPS\\\"],\[IndentingNewLine]_String,#,\[IndentingNewLine]$\
-Failed,$Failed,\[IndentingNewLine]Null,Null,\[IndentingNewLine]_,TeXForm[#]]&;\
-\>\"", "]"}], "]"}]}], "]"}]], "Input",
- CellChangeTimes->{{3.844240374152602*^9, 3.844240408928268*^9}},
- CellLabel->"In[3]:=",ExpressionUUID->"9f72965d-0e83-41d0-8f2d-b755a336be4f"],
+Failed,$Failed,\[IndentingNewLine]Null,Null,\[IndentingNewLine]_,Print[\
+TeXForm[#]]]&;\>\"", "]"}], "]"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.844240374152602*^9, 3.844240408928268*^9}, {
+  3.844252844800116*^9, 3.8442528480750837`*^9}},
+ CellLabel->"In[10]:=",ExpressionUUID->"9f72965d-0e83-41d0-8f2d-b755a336be4f"],
 
 Cell[BoxData[
  RowBox[{"LinkWrite", "[", 
@@ -365,72 +372,6 @@ Cell[BoxData[
   "]"}]], "Input",
  CellChangeTimes->{{3.844240458178582*^9, 3.84424047412012*^9}},
  CellLabel->"In[10]:=",ExpressionUUID->"800c9d0a-b437-4e9b-8584-d8ef97d406fa"],
-
-Cell[BoxData[
- RowBox[{"LinkWrite", "[", 
-  RowBox[{"link", ",", 
-   RowBox[{
-   "EnterTextPacket", "[", 
-    "\"\<$PrePrint=Switch[#,\[IndentingNewLine]_Graphics|_Graphics3D,\
-ExportString[#,\\\"EPS\\\"],\[IndentingNewLine]_String,#,\[IndentingNewLine]$\
-Failed,$Failed,\[IndentingNewLine]Null,Null,\[IndentingNewLine]_,TeXForm[#]]&;\
-\>\"", "]"}]}], "]"}]], "Input",
- CellChangeTimes->{{3.8442398499781427`*^9, 3.844239854105317*^9}, 
-   3.8442401082199574`*^9, 3.8442401960277767`*^9, {3.84424022614804*^9, 
-   3.8442402270326443`*^9}},
- CellLabel->"In[9]:=",ExpressionUUID->"112218aa-6522-4c72-87a4-944bc8ab8f96"],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"$PrePrint", "=", 
-  RowBox[{
-   RowBox[{"If", "[", 
-    RowBox[{
-     RowBox[{"MemberQ", "[", 
-      RowBox[{
-       RowBox[{"{", 
-        RowBox[{"Graphics", ",", "Graphics3D"}], "}"}], ",", 
-       RowBox[{"Head", "[", "#", "]"}]}], "]"}], ",", 
-     RowBox[{"ExportString", "[", 
-      RowBox[{"#", ",", "\"\<EPS\>\""}], "]"}], ",", "#"}], "]"}], 
-   "&"}]}]], "Input",
- CellChangeTimes->{{3.844239445146586*^9, 3.844239458257667*^9}, {
-  3.8442395227535467`*^9, 3.844239540313558*^9}, {3.844239581977521*^9, 
-  3.844239583529406*^9}, {3.8442396576414623`*^9, 3.8442397409947243`*^9}, {
-  3.844239779314986*^9, 3.844239780705428*^9}},
- CellLabel->"In[29]:=",ExpressionUUID->"39084425-65c3-4060-bc93-f9fd79a43268"],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"If", "[", 
-   RowBox[{
-    RowBox[{"MemberQ", "[", 
-     RowBox[{
-      RowBox[{"{", 
-       RowBox[{"Graphics", ",", "Graphics3D"}], "}"}], ",", 
-      RowBox[{"Head", "[", "#1", "]"}]}], "]"}], ",", 
-    RowBox[{"ExportString", "[", 
-     RowBox[{"#1", ",", "\<\"EPS\"\>"}], "]"}], ",", "#1"}], "]"}], 
-  "&"}]], "Output",
- CellChangeTimes->{3.8442397512209806`*^9, 3.844239781539617*^9},
- CellLabel->"Out[29]=",ExpressionUUID->"c8f532c6-f46c-4b51-9687-531ce0e72f71"]
-}, Open  ]],
-
-Cell[BoxData[
- RowBox[{"$PrePrint", "=", 
-  RowBox[{
-   RowBox[{"Switch", "[", 
-    RowBox[{"#", ",", "\[IndentingNewLine]", 
-     RowBox[{"_Graphics", "|", "_Graphics3D"}], ",", 
-     RowBox[{"ExportString", "[", 
-      RowBox[{"#", ",", "\"\<EPS\>\""}], "]"}], ",", "\[IndentingNewLine]", 
-     "_String", ",", "#", ",", "\[IndentingNewLine]", "$Failed", ",", 
-     "$Failed", ",", "\[IndentingNewLine]", "Null", ",", "Null", ",", 
-     "\[IndentingNewLine]", "_", ",", 
-     RowBox[{"TeXForm", "[", "#", "]"}]}], "]"}], "&"}]}]], "Input",
- CellChangeTimes->{{3.8442399584431267`*^9, 3.844240084928965*^9}},
- CellLabel->"In[41]:=",ExpressionUUID->"0a808c0b-b6ad-4dd8-b04d-bce93f189755"],
 
 Cell[CellGroupData[{
 
@@ -450,17 +391,781 @@ Cell[BoxData["Null"], "Input",
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"Sin", "[", "x", "]"}]], "Input",
- CellChangeTimes->{{3.84424007224347*^9, 3.844240075288713*^9}},
- CellLabel->"In[42]:=",ExpressionUUID->"a746f217-ebf2-4b3e-9570-08ffc60664d8"],
+ RowBox[{
+  RowBox[{"Sin", "[", "x", "]"}], "//", "TeXForm"}]], "Input",
+ CellChangeTimes->{{3.84424007224347*^9, 3.844240075288713*^9}, {
+  3.8442536899634457`*^9, 3.844253692290131*^9}},
+ CellLabel->"In[14]:=",ExpressionUUID->"a746f217-ebf2-4b3e-9570-08ffc60664d8"],
 
 Cell["\\sin (x)", "Output",
- CellChangeTimes->{{3.8442400766555643`*^9, 3.844240098061849*^9}},
- CellLabel->"Out[42]=",ExpressionUUID->"530ece3a-e3cd-408c-a296-21b7672b4f49"]
+ CellChangeTimes->{{3.8442400766555643`*^9, 3.844240098061849*^9}, 
+   3.84425369307963*^9},
+ CellLabel->
+  "Out[14]//TeXForm=",ExpressionUUID->"8f95e7e5-77af-4cc6-b7f6-a53f9518dfb2"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"%", "+", "1"}]], "Input",
+ CellChangeTimes->{{3.844253696390573*^9, 3.844253697492964*^9}},
+ CellLabel->"In[15]:=",ExpressionUUID->"99020aed-c82f-4762-a214-ffbf153615b8"],
+
+Cell[BoxData[
+ RowBox[{"1", "+", 
+  RowBox[{"Sin", "[", "x", "]"}]}]], "Output",
+ CellChangeTimes->{3.8442536981417723`*^9},
+ CellLabel->"Out[15]=",ExpressionUUID->"af2a0e0d-d24c-4377-99af-7594b05d8c0e"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "*Form"}]], "Input",
+ CellChangeTimes->{{3.844256450706873*^9, 3.844256453794182*^9}},
+ CellLabel->"In[37]:=",ExpressionUUID->"4da452b9-0e7a-4b8b-985f-bb3393626dfc"],
+
+Cell[BoxData[
+ StyleBox[
+  FrameBox[GridBox[{
+     {
+      DynamicModuleBox[{Typeset`open$$ = True}, 
+       PaneSelectorBox[{False->
+        ButtonBox[
+         RowBox[{
+          
+          DynamicBox[FEPrivate`FrontEndResource[
+           "FEBitmaps", "RightPointerOpener"]], " ", 
+          StyleBox["System`", "InformationGridGroupHeader"]}],
+         Appearance->None,
+         BaseStyle->"InformationGridLink",
+         ButtonFunction:>FEPrivate`Set[Typeset`open$$, True],
+         Evaluator->Automatic,
+         Method->"Preemptive"], True->
+        PaneBox[GridBox[{
+           {
+            ButtonBox[
+             RowBox[{
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "DownPointerOpener"],
+               ImageSizeCache->{10., {3., 7.}}], " ", 
+              StyleBox["System`", "InformationGridGroupHeader"]}],
+             Appearance->None,
+             BaseStyle->"InformationGridLink",
+             ButtonFunction:>FEPrivate`Set[Typeset`open$$, False],
+             Evaluator->Automatic,
+             Method->"Preemptive"]},
+           {
+            PaneBox[GridBox[{
+               {
+                ButtonBox[
+                 StyleBox["AccountingForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "AccountingForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["HoldForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "HoldForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["ResponseForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "ResponseForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["AnatomyForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "AnatomyForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["HorizontalForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "HorizontalForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["RuleForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "RuleForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["BaseForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "BaseForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["HornerForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "HornerForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["ScientificForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "ScientificForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["BlankForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "BlankForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["InputForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "InputForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["ScriptForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "ScriptForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["BoxForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "BoxForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["JoinForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "JoinForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["SequenceForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "SequenceForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["CapForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "CapForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["LongForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "LongForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["ShowShortBoxForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "ShowShortBoxForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["CForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "CForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["MathMLForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "MathMLForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["SpaceForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "SpaceForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["ColonForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "ColonForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["MatrixForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "MatrixForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["StandardForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "StandardForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["ColumnForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "ColumnForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["NumberForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "NumberForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["StringForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "StringForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["DecimalForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "DecimalForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["OutputForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "OutputForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["StrokeForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "StrokeForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["DisplayForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "DisplayForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["PaddedForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "PaddedForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["StyleForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "StyleForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["EdgeCapForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "EdgeCapForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["ParentForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "ParentForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["SurdForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "SurdForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["EdgeForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "EdgeForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["PercentForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "PercentForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["SyntaxForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "SyntaxForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["EdgeJoinForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "EdgeJoinForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["PolynomialForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "PolynomialForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["TableForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "TableForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["EngineeringForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "EngineeringForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["PrecedenceForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "PrecedenceForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["TeXForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "TeXForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["ExportForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "ExportForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["PrintForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "PrintForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["TextForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "TextForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["FaceForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "FaceForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["PromptForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "PromptForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["TraditionalForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "TraditionalForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["FontForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "FontForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["QuantityForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "QuantityForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["TreeForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "TreeForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["FortranForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "FortranForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["RealBlockDiagonalForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "RealBlockDiagonalForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["ValueForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "ValueForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic]},
+               {
+                ButtonBox[
+                 StyleBox["FullForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "FullForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["RecurringDigitsForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "RecurringDigitsForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic], 
+                ButtonBox[
+                 StyleBox["VerticalForm", "InformationGridButton"],
+                 Appearance->None,
+                 BaseStyle->"InformationGridLink",
+                 
+                 ButtonData:>{
+                  "Info-0fedadea-e1bf-4a45-bac6-447552dfc241", {
+                   "VerticalForm", "System`"}, False},
+                 ButtonNote->"System`",
+                 Evaluator->Automatic]}
+              },
+              DefaultBaseStyle->"Text",
+              
+              GridBoxAlignment->{
+               "Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+              GridBoxItemSize->{"Columns" -> {{
+                   Scaled[0.31666666666666665`]}}}],
+             ImageMargins->{{10, 0}, {0, 2}}]}
+          },
+          GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}}],
+         FrameMargins->{{0, 0}, {8, 0}}]}, Dynamic[Typeset`open$$],
+        ImageSize->Automatic]]}
+    },
+    GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}},
+    GridBoxDividers->{"ColumnsIndexed" -> {{False}}, "RowsIndexed" -> {}},
+    GridBoxSpacings->{"Columns" -> {
+        Offset[0.27999999999999997`], {
+         Offset[0.5599999999999999]}, 
+        Offset[0.27999999999999997`]}, "Rows" -> {
+        Offset[0.2], {
+         Offset[0.8]}, 
+        Offset[0.2]}}],
+   BaseStyle->"InformationTitleFrame"], "InformationGridPlain"]], "Output",
+ CellChangeTimes->{3.844256454462328*^9},
+ CellLabel->"Out[37]=",ExpressionUUID->"33c69d3f-2904-48e8-a307-346a4c3cee03"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"TextForm", "[", 
+  RowBox[{"TeXForm", "[", 
+   RowBox[{"Sin", "[", "x", "]"}], "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.844255342718985*^9, 3.8442553497548122`*^9}, {
+   3.844255887250046*^9, 3.8442558968523493`*^9}, {3.844255965611883*^9, 
+   3.8442559699942837`*^9}, {3.844256093704033*^9, 3.8442560960528708`*^9}, {
+   3.844256205957335*^9, 3.844256223258773*^9}, 3.844256279378837*^9, {
+   3.844256325909313*^9, 3.84425632638968*^9}, {3.844256608651847*^9, 
+   3.844256615787516*^9}},
+ CellLabel->"In[39]:=",ExpressionUUID->"3e5fcf1e-ff47-4d6f-bb0d-90fb1fd42490"],
+
+Cell[OutputFormData["\<\
+Sin[x]\
+\>", "\<\
+\\sin (x)\
+\>"], "Output",
+ CellChangeTimes->{
+  3.8442562239153557`*^9, 3.844256280019966*^9, 3.8442563283957233`*^9, {
+   3.844256610990129*^9, 3.844256617469192*^9}},
+ CellLabel->
+  "Out[39]//TextForm=",ExpressionUUID->"178192fd-72ff-49e6-80ac-16fa36f3b675"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"%", "+", "1"}]], "Input",
+ CellChangeTimes->{{3.8442563307356997`*^9, 3.8442563316765223`*^9}},
+ CellLabel->"In[36]:=",ExpressionUUID->"1e00004a-283b-4257-bd65-c59246309c2d"],
+
+Cell[BoxData[
+ RowBox[{"1", "+", 
+  RowBox[{"Sin", "[", "x", "]"}]}]], "Output",
+ CellChangeTimes->{3.844256332303133*^9},
+ CellLabel->"Out[36]=",ExpressionUUID->"7506af4a-0e5c-4350-abf0-efc5871fbed3"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"TextForm", "[", 
+  RowBox[{"Sin", "[", "x", "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.844256267607987*^9, 3.844256273662868*^9}, {
+  3.844256320618483*^9, 3.8442563211457*^9}},
+ CellLabel->"In[34]:=",ExpressionUUID->"038fd26d-25aa-4da3-bc98-7da2a5c55034"],
+
+Cell[OutputFormData["\<\
+Sin[x]\
+\>", "\<\
+Sin[x]\
+\>"], "Output",
+ CellChangeTimes->{3.8442562741634817`*^9, 3.844256323123115*^9},
+ CellLabel->
+  "Out[34]//TextForm=",ExpressionUUID->"d3e05cf5-237e-45ad-9186-65c6310a7a4f"]
 }, Open  ]]
 },
 WindowSize->{606., 683.25},
-WindowMargins->{{Automatic, 67.5}, {135, Automatic}},
+WindowMargins->{{Automatic, 112.5}, {Automatic, 66.75}},
 TaggingRules->Association["TryRealOnly" -> False],
 FrontEndVersion->"12.3 for Linux x86 (64-bit) (July 9, 2021)",
 StyleDefinitions->"Default.nb",
@@ -478,35 +1183,48 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 252, 4, 29, "Input",ExpressionUUID->"0974bb40-b3bb-4e18-b092-e4f4a9f27126"],
-Cell[835, 28, 13096, 247, 65, "Output",ExpressionUUID->"9bcb02d2-aedf-47c7-9b07-29e37343d81f"]
+Cell[580, 22, 301, 5, 29, "Input",ExpressionUUID->"0974bb40-b3bb-4e18-b092-e4f4a9f27126"],
+Cell[884, 29, 13143, 248, 63, "Output",ExpressionUUID->"b50e2411-5ab4-49b6-ba71-3fca114d01a5"]
 }, Open  ]],
-Cell[13946, 278, 772, 18, 51, "Input",ExpressionUUID->"e2e1c721-b2fd-49ba-a642-8cc6643a43ce"],
+Cell[14042, 280, 772, 18, 51, "Input",ExpressionUUID->"e2e1c721-b2fd-49ba-a642-8cc6643a43ce"],
 Cell[CellGroupData[{
-Cell[14743, 300, 386, 6, 29, "Input",ExpressionUUID->"e4510cd3-8dbb-494e-bb17-ac4e5c37d68e"],
-Cell[15132, 308, 895, 21, 103, "Output",ExpressionUUID->"ad2624a9-7fa8-4de0-aa9f-c74448ca40b3"]
+Cell[14839, 302, 386, 6, 29, "Input",ExpressionUUID->"e4510cd3-8dbb-494e-bb17-ac4e5c37d68e"],
+Cell[15228, 310, 690, 17, 110, "Output",ExpressionUUID->"c7efbda3-7d72-4f33-83aa-28a0e6386cc1"]
 }, Open  ]],
-Cell[16042, 332, 680, 12, 101, "Input",ExpressionUUID->"9f444b53-4249-4993-99e0-c5fb1bc8fde1"],
-Cell[16725, 346, 551, 11, 133, "Input",ExpressionUUID->"9f72965d-0e83-41d0-8f2d-b755a336be4f"],
-Cell[17279, 359, 328, 7, 29, "Input",ExpressionUUID->"800c9d0a-b437-4e9b-8584-d8ef97d406fa"],
-Cell[17610, 368, 617, 12, 133, "Input",ExpressionUUID->"112218aa-6522-4c72-87a4-944bc8ab8f96"],
+Cell[15933, 330, 679, 12, 71, "Input",ExpressionUUID->"9f444b53-4249-4993-99e0-c5fb1bc8fde1"],
+Cell[16615, 344, 291, 6, 29, "Input",ExpressionUUID->"725c9554-98db-4e1d-8aed-672df7658b6a"],
+Cell[16909, 352, 610, 12, 133, "Input",ExpressionUUID->"9f72965d-0e83-41d0-8f2d-b755a336be4f"],
+Cell[17522, 366, 328, 7, 29, "Input",ExpressionUUID->"800c9d0a-b437-4e9b-8584-d8ef97d406fa"],
 Cell[CellGroupData[{
-Cell[18252, 384, 740, 17, 71, "Input",ExpressionUUID->"39084425-65c3-4060-bc93-f9fd79a43268"],
-Cell[18995, 403, 504, 13, 55, "Output",ExpressionUUID->"c8f532c6-f46c-4b51-9687-531ce0e72f71"]
+Cell[17875, 377, 180, 2, 29, "Input",ExpressionUUID->"af3a6a5e-0ab3-4dc9-bdee-7223b2bc926d"],
+Cell[18058, 381, 157, 2, 33, "Output",ExpressionUUID->"f2878054-bc87-4c95-8fec-b626bf092ef6"]
 }, Open  ]],
-Cell[19514, 419, 688, 13, 133, "Input",ExpressionUUID->"0a808c0b-b6ad-4dd8-b04d-bce93f189755"],
+Cell[18230, 386, 175, 2, 29, "Input",ExpressionUUID->"a2168652-5c3d-4479-8e34-2820fa0f211c"],
 Cell[CellGroupData[{
-Cell[20227, 436, 180, 2, 29, "Input",ExpressionUUID->"af3a6a5e-0ab3-4dc9-bdee-7223b2bc926d"],
-Cell[20410, 440, 157, 2, 33, "Output",ExpressionUUID->"f2878054-bc87-4c95-8fec-b626bf092ef6"]
+Cell[18430, 392, 281, 5, 29, "Input",ExpressionUUID->"a746f217-ebf2-4b3e-9570-08ffc60664d8"],
+Cell[18714, 399, 211, 4, 47, "Output",ExpressionUUID->"8f95e7e5-77af-4cc6-b7f6-a53f9518dfb2"]
 }, Open  ]],
-Cell[20582, 445, 175, 2, 29, "Input",ExpressionUUID->"a2168652-5c3d-4479-8e34-2820fa0f211c"],
 Cell[CellGroupData[{
-Cell[20782, 451, 200, 3, 29, "Input",ExpressionUUID->"a746f217-ebf2-4b3e-9570-08ffc60664d8"],
-Cell[20985, 456, 174, 2, 34, "Output",ExpressionUUID->"530ece3a-e3cd-408c-a296-21b7672b4f49"]
+Cell[18962, 408, 194, 3, 29, "Input",ExpressionUUID->"99020aed-c82f-4762-a214-ffbf153615b8"],
+Cell[19159, 413, 203, 4, 33, "Output",ExpressionUUID->"af2a0e0d-d24c-4377-99af-7594b05d8c0e"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[19399, 422, 193, 3, 29, "Input",ExpressionUUID->"4da452b9-0e7a-4b8b-985f-bb3393626dfc"],
+Cell[19595, 427, 28244, 677, 511, "Output",ExpressionUUID->"33c69d3f-2904-48e8-a307-346a4c3cee03"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[47876, 1109, 596, 10, 29, "Input",ExpressionUUID->"3e5fcf1e-ff47-4d6f-bb0d-90fb1fd42490"],
+Cell[48475, 1121, 304, 9, 52, "Output",ExpressionUUID->"178192fd-72ff-49e6-80ac-16fa36f3b675"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[48816, 1135, 198, 3, 29, "Input",ExpressionUUID->"1e00004a-283b-4257-bd65-c59246309c2d"],
+Cell[49017, 1140, 201, 4, 33, "Output",ExpressionUUID->"7506af4a-0e5c-4350-abf0-efc5871fbed3"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[49255, 1149, 283, 5, 29, "Input",ExpressionUUID->"038fd26d-25aa-4da3-bc98-7da2a5c55034"],
+Cell[49541, 1156, 224, 7, 52, "Output",ExpressionUUID->"d3e05cf5-237e-45ad-9186-65c6310a7a4f"]
 }, Open  ]]
 }
 ]
 *)
-
-(* End of internal cache information *)
 

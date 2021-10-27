@@ -14,7 +14,9 @@
 
 #include <cstddef>
 #include <cstring>
+#include <ios>
 #include <iostream>
+#include <ostream>
 #include <sstream>
 #include <string>
 #include <fstream>
@@ -23,29 +25,14 @@
 #define LOG_PKT 0
 #define LOG_RETURNSTRING 0
 
-constexpr auto seg1 =
-"With[{tmp=(";
-// seg2: input string as an expression
-constexpr auto seg3 =
-  ")},"
-  "Switch[tmp,";
-constexpr auto seg4_epshead =
-    "_Graphics|_Graphics3D," "ExportString[tmp,\"EPS\"],";
-constexpr auto seg5 =
-    "_String,tmp,"
-    "$Failed,$Failed,"
-    "Null,Null,"
-    "_,Print[TeXForm[tmp]]"
-  "]"
-"]";
-
 constexpr auto preprint =
   "$PrePrint=Switch[#,"
-    "Graphics|_Graphics3D,ExportString[#,\"EPS\"],"
-    "String,#,"
+    "_Graphics|_Graphics3D,TextForm[ExportString[#,\"EPS\"]],"
+  //"String,TextForm[#],"
     "$Failed,$Failed,"
     "Null,Null,"
-    "_,TeXForm[#]]&;";
+    "_,TextForm[TeXForm[#]]]&;";
+
 /*
  * To fetch useful output from Mathematica, there are basically three ways:
  *
@@ -96,41 +83,8 @@ private:
     }
     exit(3);
   }
-
-
-  void put_latex(const unsigned char* s) {
-    std::cout << DATA_BEGIN << "latex: "
-              << s
-              << DATA_END;
-  }
-  void put_latex(const unsigned char* s, char delim) {
-    std::cout << DATA_BEGIN << "latex: "
-              << delim << s << delim
-              << DATA_END;
-  }
-  void put_latex(const unsigned char* s, const char* prefix) {
-    std::cout << DATA_BEGIN << "latex: "
-              << prefix << s
-              << DATA_END;
-  }
-  void put_ps(const unsigned char*) {
-    std::cout << DATA_BEGIN
-              << "ps: " << s
-              << DATA_END;
-  }
-  void put_verbatim(const unsigned char* s) {
-    std::cout << DATA_BEGIN << "verbatim: "
-              << s
-              << DATA_END;
-  }
-  void put_prompt(const unsigned char* s) {
-    std::cout << DATA_BEGIN << "prompt#\\pink "
-              << s << "{}"
-              << DATA_END;
-  }
-
-
 public:
+
   WSSession()
   {
     int err;
@@ -156,44 +110,77 @@ public:
     WSDeinitialize(ep);
   };
 
-  void enter_string(const char *s)
+  void put_latex(const unsigned char* s) {
+    std::cout << DATA_BEGIN << "latex: "
+              << s
+              << DATA_END;
+  }
+  void put_latex(const char* s) { put_latex((const unsigned char*)s); }
+  void put_latex(const unsigned char* s, char delim) {
+    std::cout << DATA_BEGIN << "latex: "
+              << delim << s << delim
+              << DATA_END;
+  }
+  void put_latex(const unsigned char* s, const char* prefix) {
+    std::cout << DATA_BEGIN << "latex: "
+              << prefix << s
+              << DATA_END;
+  }
+  void put_ps(const unsigned char* s) {
+    std::fstream f;
+    const char* fname = "/tmp/tm_ps.eps";
+    f.open(fname, std::ios_base::out);
+    f << s;
+    f.close();
+    std::cout << DATA_BEGIN << "file:"
+              << fname << "?width=0.418par"
+              << DATA_END;
+    return;
+
+    std::cout << DATA_BEGIN << "latex:" << DATA_BEGIN
+              << "ps:" //<< "% -width 0.418par\n"
+              << s << "?width=0.418par"
+              << DATA_END << DATA_END;
+  }
+  void put_verbatim(const unsigned char* s) {
+    std::cout << DATA_BEGIN << "verbatim: "
+              << s
+              << DATA_END;
+  }
+  void put_prompt(const unsigned char* s) {
+    std::cout << DATA_BEGIN << "latex:"
+              << DATA_BEGIN << "prompt#\\pink "
+              << s << "{}"
+              << DATA_END
+              << DATA_END;
+  }
+
+  void enter_string_expr(const char *s)
   {
-    //WSPutFunction(lp, "EvaluatePacket", 1L);
-      WSPutFunction(lp, "ToExpression", 1L);
-        WSPutString(lp, s);
+    WSPutFunction(lp, "ToExpression", 1L);
+      WSPutString(lp, s);
     WSEndPacket(lp);
     WSFlush(lp);
   }
 
-  void enter_string_new(const char* s) {
+  void enter_text_packet(const char* s) {
     WSPutFunction(lp, "EnterTextPacket", 1L);
     WSPutString(lp, s);
     WSEndPacket(lp);
     WSFlush(lp);
   }
 
-  void enter_string_with_ctx(const char *s)
-  {
-    std::ostringstream mathin;
-    mathin << seg1 << s << seg3 << seg4_epshead << seg5;
-
-#if LOG_INPUTEXPR
-    std::cerr << mathin.str() << std::endl;
-#endif
-
-    enter_string(mathin.str().c_str());
-  }
-
   void output_to_screen() {
     int order = 1, length, numofchar;
-    int pkt = OUTPUTNAMEPKT;
+    int pkt = 0;
     const unsigned char* result;
 
-    std::cout << "\2verbatim:";
+    std::cout << DATA_BEGIN << "verbatim:";
     // embed outputs within a single `verbatim' env
 
-    while ( (pkt!=INPUTNAMEPKT) && (pkt=WSNextPacket(lp)) ) {
-      if (order!=1) { std::cout << '\n'; }
+    while ( (pkt!=INPUTNAMEPKT) ) {
+      if (order!=1 && pkt!=OUTPUTNAMEPKT) { std::cout << '\n'; }
+      pkt = WSNextPacket(lp);
 
       switch (pkt) {
       case INPUTNAMEPKT:
@@ -208,40 +195,41 @@ public:
         break;
       case RETURNTEXTPKT:
         handle_returntextpkt();
+        //std::cout << "1";
         break;
 
       default:
         break;
       }
 
+      WSNewPacket(lp);
       order++;
     }
-    std::cout << "\5";
+
+    std::cout << DATA_END;
   }
+
   void handle_returntextpkt() {
     int elem, length, numofchar;
     const unsigned char* result;
 
     switch ( (elem=WSGetNext(lp)) ) {
-
     case WSTKSTR:
+      //std::cerr << "WSTKSTR" << std::endl;
       WSGetUTF8String(lp, &result, &length, &numofchar);
-
       if ( ! memcmp("%!PS", result, 4) ){
         // PS
-        std::cout << "\2ps:" << result << "\5";
-
+        put_ps(result);
       } else {
         // string
-        std::cout << "\2verbatim: " << result << "\5";
+        put_latex(result,'$');
       }
-
       WSReleaseUTF8String(lp, result, length);
       break;
 
     case WSTKSYM:
+      //std::cerr << "WSTKSYM" << std::endl;
       WSGetUTF8String(lp, &result, &length, &numofchar);
-
       if ( ! (memcmp("$Failed", result, 7)) ) {
         // handle Symbol: $Failed
         put_verbatim((const unsigned char*)"$Failed");
@@ -249,25 +237,19 @@ public:
         // ignore Symbol: Null
       } else {
         // Unexpected symbol
-        put_latex((const unsigned char*)"\\red Unexpected symbol returned:");
-        // TODO: fix it.
-
-        //std::cout << "\\red \2verbatim: Unexpected symbol returned: "
-        //          << result << "\5";
+        put_latex(result, "\\red Unexpected symbol returned: ");
       }
       WSReleaseUTF8String(lp, result, length);
       break;
 
     default:
-      std::cout << "\\red Unknown data from RETURNPKT: " << elem;
+      std::cout << DATA_BEGIN
+                << "latex:\\red Unknown data from RETURNPKT: " << elem
+                << DATA_END;
     }
-}
-  void set_preprint() {
-    WSPutFunction(lp, "ToExpression", 1L);
-    WSPutString(lp, preprint);
-    WSEndPacket(lp);
-    WSFlush(lp);
-}
+  }
+
+  void set_preprint() { enter_string_expr(preprint); }
 
   void read_string_to_screen()
   {
@@ -346,7 +328,6 @@ public:
         filter(result);
         std::cout << "$";
 
-
       } else {
         // handle message text output
         std::cout << "\\magenta Message:\2verbatim:\n"
@@ -421,30 +402,18 @@ public:
 };
 
 int main(int argc, char *argv[]) {
-  size_t InNum = 1;
   std::string input;
 
   WSSession session;
-
-  std::cout << "\2latex:\\red Mathematicas plugin for TeXmacs - A renewed version written in C++"
-            << "\2prompt#\\pink In[" << InNum++ << "]:= {}\5\5";
-  std::cout.flush();
+  session.set_preprint();
+  session.put_latex("\\red Mathematica within TeXmacs");
 
   while (1) {
-    //std::ostringstream output;
-    //output << "";
-    
-    input.clear();
-    std::getline(std::cin, input);
-    
-    session.enter_string_with_ctx(input.c_str());
-    session.read_string_to_screen();
-
-    std::cout << "\2prompt#\\pink In[" << InNum++ << "]:= {}\5\5";
+    session.output_to_screen();
     std::cout.flush();
 
-    //std::cout << output.str() << std::endl;
+    input.clear();
+    std::getline(std::cin, input, '\0');
+    session.enter_text_packet(input.c_str());
   }
-
-  return 0;
 }
