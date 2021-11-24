@@ -3,6 +3,14 @@
   #+CAPTION: Use TeXmacs as the frontend of everything!
   [[./demo.png]]
 
+**  UPDATE
+
+*** 2021/11/25
+
+One night I wanted to neither read books nor sleep, then I rewrote this project.
+Now =%= like that in notebook frontend is supported, and, the logic of format and inter-communication
+is clarified.
+
 ** Installation and Use
 
    To use this plugin, you need compile it manually. Check following steps:
@@ -21,7 +29,11 @@
    #+begin_src
      # pepper in ~/.TeXmacs/plugins/mma on git:main o [19:34:43]
      $ make
-     g++ -m64 -o bin/tm_mma.bin src/tm_mathematica_wstp.cxx -I/usr/local/Wolfram/Mathematica/12.3/SystemFiles/Links/WSTP/DeveloperKit/Linux-x86-64/CompilerAdditions -L/usr/local/Wolfram/Mathematica/12.3/SystemFiles/Links/WSTP/DeveloperKit/Linux-x86-64/CompilerAdditions -Wl,-rpath,/usr/local/Wolfram/Mathematica/12.3/SystemFiles/Links/WSTP/DeveloperKit/Linux-x86-64/CompilerAdditions -lWSTP64i4 -lm -lrt -ldl -luuid  -Wl,--gc-sections -lpthread
+     g++ -m64 -o bin/tm_mma.bin src/tm_mathematica_wstp.cxx
+     -I/usr/local/Wolfram/Mathematica/12.3/SystemFiles/Links/WSTP/DeveloperKit/Linux-x86-64/CompilerAdditions
+     -L/usr/local/Wolfram/Mathematica/12.3/SystemFiles/Links/WSTP/DeveloperKit/Linux-x86-64/CompilerAdditions
+     -Wl,-rpath,/usr/local/Wolfram/Mathematica/12.3/SystemFiles/Links/WSTP/DeveloperKit/Linux-x86-64/CompilerAdditions
+     -lWSTP64i4 -lm -lrt -ldl -luuid  -Wl,--gc-sections -lpthread
    #+end_src
    If no error is reported, then next time when you start TeXmacs, this plugin will be available.
 
@@ -59,6 +71,8 @@
    |----------------------------+---------------+-----------------------------------------------------|
    | InputPacket["prompt"]      | INPUTPKT      | request for a response to an =Input= function         |
    | CallPacket[i,list]         | CALLPKT       | request for a call to an external function          |
+
+   =NOTE: goal in this part is somehow outmoded, while the fact is true.=
 
    As a lite frontend, we only need to handle =RETURNPKT=, =TEXTPKT= and =MESSAGEPKT= for below reasons:
 

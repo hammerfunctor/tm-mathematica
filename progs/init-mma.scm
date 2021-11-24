@@ -11,8 +11,16 @@
 ;; in the root directory or <http://www.gnu.org/licenses/gpl-3.0.html>.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(define (mma-serialize lan t)
+    (with u (pre-serialize lan t)
+      (with s (texmacs->code (stree->tree u) "SourceCode")
+        (string-append s "\0"))))
 
 (plugin-configure mma
   (:require (url-exists? (url-unix "$PATH" "math")))
+  (:serializer ,mma-serialize)
   (:launch "tm_mma.bin")
   (:session "Mathematica - CXX"))
+
+(when (supports-mma?)
+  (plugin-input-converters mma))
