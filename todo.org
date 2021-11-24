@@ -1,25 +1,6 @@
 #+AUTHOR: Hammer Hu
 #+DATE: Thursday, 7 October 2021 20:05
 
-** Stdout pipe
-
-   There are some bugs for literal printing while connecting to WolframKernel using =math=.
-   Try this exmaple:
-
-   #+begin_src
-     s[1] = I {{0, 0, 0}, {0, 0, -1}, {0, 1, 0}};
-     s[2] = I {{0, 0, 1}, {0, 0, 0}, {-1, 0, 0}};
-     s[3] = I {{0, -1, 0}, {1, 0, 0}, {0, 0, 0}};
-     ep = ToString@TeXForm@FullSimplify@Eigensystem[I (t1 s[1] + t2 s[2] + t3 s[3])];
-   #+end_src
-
-   In Notebook environment everything works well. In =math= you can also export =ep= to a file as well.
-   But when it comes to "print =ep= in =math=", some characters are incorrectly figured. I guess there
-   are some bugs within the output pipe of =math=.
-
-   I prepare to use returned value to get around this problem.
-
-
 ** Transfer =Switch= to a multiple dispatched format function
 
    Purely for fun, probably with tiny improment in performance.
