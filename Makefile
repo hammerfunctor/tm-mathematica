@@ -9,7 +9,7 @@
 
 WSTP_PATH := /usr/local/Wolfram/Mathematica/12.3/SystemFiles/Links/WSTP/DeveloperKit/Linux-x86-64/CompilerAdditions
 
-CXXFLAGS := -I$(WSTP_PATH) -L$(WSTP_PATH) -Wl,-rpath,$(WSTP_PATH) -lWSTP64i4 -lm -lrt -ldl -luuid #-lstdc++ 
+CXXFLAGS := -I$(WSTP_PATH) -L$(WSTP_PATH) -Wl,-rpath,$(WSTP_PATH) -lWSTP64i4 -lm -lrt -ldl -luuid -std=c++2a
 
 ifeq ($(shell uname),Darwin)
 	CXXFLAGS += -Wl,-dead-strip
