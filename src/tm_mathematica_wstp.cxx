@@ -272,33 +272,31 @@ public:
     }
   }
 
-  void set_preprint() { enter_string_expr(preprint); }
-};
-
-void check_magic_line(std::string& s, WSSession& session) {
-  std::string::size_type pos = 0;
-  std::string::size_type prev = 0;
+  void apply_and_remove_magic_lines(std::string& s) {
+    std::string::size_type pos = 0;
+    std::string::size_type prev = 0;
   
-  while ((pos = s.find('\n', prev)) != std::string::npos) {
-    if (s.substr(prev, pos - prev).starts_with('%')) {
+    while ((pos = s.find('\n', prev)) != std::string::npos) {
+      if (s.substr(prev, pos - prev).starts_with('%')) {
 
-      if (s.substr(prev, pos - prev).find("\%noprefix") != std::string::npos) {
-        session.prefix = false;
+        if (s.substr(prev, pos - prev).find("\%noprefix") != std::string::npos) {
+          prefix = false;
+        } // else
+        prev = pos + 1;
+      } else {
+        break;
       }
-      // else
-
-      prev = pos + 1;
-    } else {
-      break;
     }
+    s.erase(0, prev);
   }
-  s.erase(0, prev);
-}
 
-void reset_state(WSSession& session) {
-  session.prefix = true;
-  session.nextnewline = false;
-}
+  void set_preprint() { enter_string_expr(preprint); }
+
+  void reset_state() {
+    prefix = true;
+    nextnewline = false;
+  }
+};
 
 int main(int argc, char *argv[]) {
   std::string input;
@@ -310,12 +308,12 @@ int main(int argc, char *argv[]) {
   while (1) {
     session.output_to_screen();
     std::cout.flush();
-    reset_state(session);
+    session.reset_state();
 
     input.clear();
     std::getline(std::cin, input, '\0');
 
-    check_magic_line(input, session);
+    session.apply_and_remove_magic_lines(input);
     session.enter_text_packet(input.c_str());
   }
 }
