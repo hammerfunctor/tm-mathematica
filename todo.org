@@ -1,11 +1,16 @@
 #+AUTHOR: Hammer Hu
 #+DATE: Thursday, 7 October 2021 20:05
 
-** Transfer =Switch= to a multiple dispatched format function
-
-   Purely for fun, probably with tiny improment in performance.
-
 ** Add a global fallback function for default output
 
-   Sometimes I want to show the standard form instead of TeX form, thus a fallback format function
-   helps to control the output form, which can be override globally or locally using =Block=.
+Sometimes I want to show the standard form instead of TeX form, thus a fallback format function
+helps to control the output form, which can be override globally or locally using =Block=.
+
+** Add non-trivial support for magic lines
+
+Like =% -width 0.418par=.
+
+** Implement completion and format
+
+Possible resource: [https://github.com/kenkangxgwe/lsp-wl].
+Indentation like that of Scheme plugin.

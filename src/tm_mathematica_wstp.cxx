@@ -16,10 +16,13 @@
 #include <cstring>
 #include <ios>
 #include <iostream>
+#include <iterator>
 #include <ostream>
 #include <sstream>
 #include <string>
 #include <fstream>
+#include <vector>
+#include <unistd.h>
 
 #define LOG_INPUTEXPR 0
 #define LOG_PKT 0
@@ -34,6 +37,11 @@ constexpr auto preprint =
     "_,TextForm[TeXForm[#]]]&;";
 
 //=========================== main class
+struct OutputItem {
+  bool isoutputname;
+  std::string content;
+};
+
 class WSSession {
 
 private:
@@ -54,8 +62,6 @@ private:
     exit(3);
   }
 public:
-  bool nextnewline = false;
-  bool prefix = true;
 
   WSSession()
   {
@@ -82,53 +88,54 @@ public:
     WSDeinitialize(ep);
   };
 
-  void put_latex(const unsigned char* s) {
-    std::cout << DATA_BEGIN << "latex: "
-              << s
-              << DATA_END;
+
+  auto fmt_latex(const unsigned char* s) {
+    std::ostringstream o {};
+    o << DATA_BEGIN << "latex: " << s << DATA_END;
+    return o.str();
   }
-  void put_latex(const char* s) { put_latex((const unsigned char*)s); }
-  void put_latex(const unsigned char* s, char delim) {
-    std::cout << DATA_BEGIN << "latex: "
-              << delim << s << delim
-              << DATA_END;
+  auto fmt_latex(const unsigned char* s, const char* prefix) {
+    std::ostringstream o {};
+    o << DATA_BEGIN << "latex: " << prefix << s << DATA_END;
+    return o.str();
   }
-  void put_latex(const unsigned char* s, const char* prefix) {
-    std::cout << DATA_BEGIN << "latex: "
-              << prefix << s
-              << DATA_END;
+  auto fmt_latex(const unsigned char* s, char delim) {
+    std::ostringstream o {};
+    o << DATA_BEGIN << "latex: " << delim << s << delim << DATA_END;
+    return o.str();
   }
-  void put_ps(const unsigned char* s) {
+
+  void put_latex(const char* s) { std::cout << fmt_latex((const unsigned char*)s); }
+
+  auto fmt_ps(const unsigned char* s) {
+    // write to file
     std::fstream f;
-    const char* fname = "/tmp/tm_ps.eps";
-    f.open(fname, std::ios_base::out);
-    f << s;
-    f.close();
-    std::cout << DATA_BEGIN << "file:"
-              << fname << "?width=0.618par"
-              << DATA_END;
-    return;
+    std::string fname { "/tmp/mma_eps_" };
+    fname.append(std::to_string(getpid()));
+    fname.append(".eps");
+    f.open(fname, std::ios_base::out); f << s; f.close();
 
-    std::cout << DATA_BEGIN << "latex:" << DATA_BEGIN
-              << "ps:" //<< "% -width 0.418par\n"
-              << s << "?width=0.418par"
-              << DATA_END << DATA_END;
-  }
-  void put_verbatim(const unsigned char* s) {
-    std::cout << DATA_BEGIN << "verbatim: "
-              << s
-              << DATA_END;
-  }
-  void put_prompt(const unsigned char* s) {
-    std::cout << DATA_BEGIN << "latex:"
-              << DATA_BEGIN << "prompt#\\pink "
-              << s << "{}"
-              << DATA_END
-              << DATA_END;
+    std::ostringstream o {};
+    o << DATA_BEGIN << "file:" << fname << "?width=0.618par" << DATA_END;
+    return o.str();
   }
 
-  void enter_string_expr(const char *s)
-  {
+  auto fmt_verbatim(const unsigned char* s) {
+    std::ostringstream o {};
+    o << DATA_BEGIN << "verbatim: " << s << DATA_END;
+    return o.str();
+  }
+  auto fmt_verbatim(const char* s) { return fmt_verbatim((const unsigned char*)s); }
+
+  auto fmt_prompt(const unsigned char* s) {
+    std::ostringstream o {};
+    o << DATA_BEGIN << "latex:" << DATA_BEGIN << "prompt#\\pink "
+      << s << "{}"
+      << DATA_END << DATA_END;
+    return o.str();
+  }
+
+  void enter_string_expr(const char *s) {
     WSPutFunction(lp, "ToExpression", 1L);
       WSPutString(lp, s);
     WSEndPacket(lp);
@@ -143,51 +150,49 @@ public:
   }
 
   void output_to_screen() {
-    int length, numofchar;
+    int length, numofchar, onamenumber = 0;
     int pkt;
     const unsigned char* result;
-
-    std::cout << DATA_BEGIN << "verbatim:";
-    // embed outputs within a single `verbatim' env
+    std::vector<OutputItem> items {};
 
     do {
       pkt = WSNextPacket(lp);
+      std::string content {}; // concat returned string and `\n'
 
       switch (pkt) {
       case INPUTNAMEPKT:
-        nextnewline = false;
         WSGetUTF8String(lp, &result, &length, &numofchar);
-        put_prompt(result);
+        items.push_back( {false, fmt_prompt(result)} );
         WSReleaseUTF8String(lp, result, length);
         break;
       case OUTPUTNAMEPKT:
-        nextnewline = false;
+        onamenumber += 1;
         WSGetUTF8String(lp, &result, &length, &numofchar);
-        if (prefix)
-          put_latex(result, "\\magenta ");
+        items.push_back( {true, fmt_latex(result,"\\magenta ")} );
         WSReleaseUTF8String(lp, result, length);
         break;
       case RETURNTEXTPKT:
-        nextnewline = true; // if Null, it will be false. Or true is ok
-        handle_returntextpkt();
-        //std::cout << "1";
+        handle_returntextpkt(items);
         break;
       case TEXTPKT:
-        nextnewline = false; // '\n' is already included in the printed string
         WSGetUTF8String(lp, &result, &length, &numofchar);
-        put_verbatim(result);
+        content.append(fmt_verbatim(result));
+        // '\n' is already included in the printed string
+        //content.push_back('\n');
+        items.push_back( {false,content} );
         WSReleaseUTF8String(lp, result, length);
         break;
       case MESSAGEPKT:
-        nextnewline = true;
         WSNewPacket(lp);
         pkt = WSNextPacket(lp);
+
         WSGetUTF8String(lp, &result, &length, &numofchar);
-        put_latex(result, "\\red ");
+        content.append(fmt_latex(result,"\\red "));
+        content.push_back('\n');
+        items.push_back( {false,content} );
         WSReleaseUTF8String(lp, result, length);
         break;
       case SYNTAXPKT:
-        nextnewline = false;
         break;
       default:
         break;
@@ -220,20 +225,24 @@ public:
         std::cerr << "Unrecognized: " << pkt;
         break;
       }
-      std::cerr << " " << nextnewline << std::endl;
 #endif
 
       WSNewPacket(lp);
-
-      if (nextnewline) { std::cout << '\n'; }
+      content.clear();
     } while (pkt!=INPUTNAMEPKT);
 
+    std::cout << DATA_BEGIN << "verbatim:";
+    for (auto item : items) {
+      if (onamenumber==1 && item.isoutputname) {}
+      else { std::cout << item.content; }
+    }
     std::cout << DATA_END;
   }
 
-  void handle_returntextpkt() {
+  void handle_returntextpkt(std::vector<OutputItem>& items) {
     int elem, length, numofchar;
     const unsigned char* result;
+    std::string content {};
 
     switch ( (elem=WSGetNext(lp)) ) {
     case WSTKSTR:
@@ -241,10 +250,14 @@ public:
       WSGetUTF8String(lp, &result, &length, &numofchar);
       if ( ! memcmp("%!PS", result, 4) ){
         // PS
-        put_ps(result);
+        content.append(fmt_ps(result));
+        content.push_back('\n');
+        items.push_back( {false, content} );
       } else {
         // string
-        put_latex(result,'$');
+        content.append(fmt_latex(result,'$'));
+        content.push_back('\n');
+        items.push_back( {false, content} );
       }
       WSReleaseUTF8String(lp, result, length);
       break;
@@ -254,34 +267,41 @@ public:
       WSGetUTF8String(lp, &result, &length, &numofchar);
       if ( ! (memcmp("$Failed", result, 7)) ) {
         // handle Symbol: $Failed
-        put_verbatim((const unsigned char*)"$Failed");
+        content.append(fmt_verbatim("$Failed"));
+        content.push_back('\n');
+        items.push_back( {false,content} );
+        //put_verbatim((const unsigned char*)"$Failed");
       } else if ( ! (memcmp("Null", result, 4)) ) {
         // ignore Symbol: Null
-        nextnewline = false;
       } else {
         // Unexpected symbol
-        put_latex(result, "\\red Unexpected symbol returned: ");
+        content.append(fmt_latex(result, "\\red Unexpected symbol returned: "));
+        content.push_back('\n');
+        items.push_back( {false,content} );
       }
       WSReleaseUTF8String(lp, result, length);
       break;
 
     default:
-      std::cout << DATA_BEGIN
-                << "latex:\\red Unknown data from RETURNPKT: " << elem
-                << DATA_END;
+      std::ostringstream o {};
+      o << DATA_BEGIN << "latex:\\red Unknown data from RETURNPKT: "<<elem << DATA_END << '\n';
+      items.push_back( {false, o.str()} );
     }
   }
 
   void apply_and_remove_magic_lines(std::string& s) {
     std::string::size_type pos = 0;
     std::string::size_type prev = 0;
-  
+
     while ((pos = s.find('\n', prev)) != std::string::npos) {
       if (s.substr(prev, pos - prev).starts_with('%')) {
 
-        if (s.substr(prev, pos - prev).find("\%noprefix") != std::string::npos) {
-          prefix = false;
-        } // else
+        //if (s.substr(prev, pos - prev).find("\%noprefix") != std::string::npos) {
+        //  prefix = false;
+        // } // else
+
+        // TODO: support some real magic line
+
         prev = pos + 1;
       } else {
         break;
@@ -291,11 +311,6 @@ public:
   }
 
   void set_preprint() { enter_string_expr(preprint); }
-
-  void reset_state() {
-    prefix = true;
-    nextnewline = false;
-  }
 };
 
 int main(int argc, char *argv[]) {
@@ -308,12 +323,11 @@ int main(int argc, char *argv[]) {
   while (1) {
     session.output_to_screen();
     std::cout.flush();
-    session.reset_state();
 
     input.clear();
     std::getline(std::cin, input, '\0');
 
-    session.apply_and_remove_magic_lines(input);
+    //session.apply_and_remove_magic_lines(input);
     session.enter_text_packet(input.c_str());
   }
 }
