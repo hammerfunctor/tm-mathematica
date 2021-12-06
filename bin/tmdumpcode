@@ -1,0 +1,44 @@
+#!/bin/env python
+
+import sys
+import re
+from os import path
+
+def extract(src, dst):
+    
+    target_file = dst
+    
+    with open(src) as f:
+        lines = list(filter(lambda x: not x.isspace(), f.readlines()))
+        s = ''.join(lines)
+
+    pat = re.compile(r'<\\session\|mma\|default>.*?</session>', re.DOTALL)
+    sessions = '\n'.join(pat.findall(s))
+
+    pat_all = re.compile(r'<\|input>(.*?)</input>|<\|folded-io>(.*?)<\|folded-io>|<\|unfolded-io>(.*?)<\|unfolded-io>', re.DOTALL)
+
+    blocks = list(map(
+        lambda x:'\n'.join(map(
+            lambda y:y.replace('\\ ','').replace('\\;','').replace('\\\n','').strip(),
+            ''.join(x).strip().splitlines())),
+        pat_all.findall(sessions)))
+
+    with open(target_file, "w") as f:
+        f.write('\n\n'.join(blocks))
+
+
+def main(argv):
+    if len(argv) == 1:
+        src = argv[0]
+        if src.endswith('.tm') and path.exists(src):
+            dst = path.basename(src).replace('.tm', '.m')
+            extract(src, dst)
+        else:
+            print('Fail at 1.')
+    elif len(argv) == 2:
+        src,dst = argv
+        if src.endswith('.tm') and path.exists(src) and dst.endswith('.m'):
+            extract(src, dst)
+
+if __name__ == "__main__":
+    main(sys.argv[1:])

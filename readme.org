@@ -17,6 +17,17 @@ since each time codes are rerun, indices will most probably change.)
 Outputname prefix like ~Out[12]=~ now will not be displayed only when there is one single return,
 which is really useful for that wrapped in a executable fold, e.g. a figure in the demo.
 
+Added a ~python~ script to dump all codes within ~mma~ sessions of a ~.tm~ file to a ~.m~ file. This will be
+helpful if you want to collect all codes for some specific use case. Run:
+#+begin_src sh
+  # if path of this script is already added to $PATH
+  # use an alias or different link name if you like
+  tmdumpcode <path to .tm file like rep.tm> [<target .m file like rep-out.m>]
+#+end_src
+Then ~rep-out.m~ (or ~rep.m~ if no target is specified) will appear in your current directory.
+
+~⚠️NOTE: This will override your target file. Be careful!~
+
 ** Installation and Use
 
    To use this plugin, you need compile it manually. Check following steps:
