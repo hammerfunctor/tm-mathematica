@@ -5,13 +5,6 @@
 
 **  UPDATE
 
-*** 2021/11/25
-
-One night I wanted to neither read books nor sleep, then I rewrote this project.
-Now =%= like that in notebook frontend is supported, and, the logic of format and inter-communication
-is clarified. (Though it's possible to write =%12=, I personally recommend you not to do like this,
-since each time codes are rerun, indices will most probably change.)
-
 *** 2021/12/06
 
 Outputname prefix like ~Out[12]=~ now will not be displayed only when there is one single return,
@@ -27,6 +20,12 @@ helpful if you want to collect all codes for some specific use case. Run:
 Then ~rep-out.m~ (or ~rep.m~ if no target is specified) will appear in your current directory.
 
 ~⚠️NOTE: This will override your target file. Be careful!~
+*** 2021/11/25
+
+One night I wanted to neither read books nor sleep, then I rewrote this project.
+Now =%= like that in notebook frontend is supported, and, the logic of format and inter-communication
+is clarified. (Though it's possible to write =%12=, I personally recommend you not to do like this,
+since each time codes are rerun, indices will most probably change.)
 
 ** Installation and Use
 
