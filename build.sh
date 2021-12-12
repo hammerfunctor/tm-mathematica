@@ -1,0 +1,25 @@
+#!/bin/sh
+
+if [ ! -z ${WOLFRAM_PATH} ]; then
+  search_path=$WOLFRAM_PATH
+else
+  echo "WOLFRAM_PATH not specified"
+  if [ $(uname) = "Linux" ]; then
+    search_path="/usr/local"
+  elif [ $(uname) = "Darwin" ]; then
+    search_path="/Applications/Mathematica"
+  else
+    echo "Unknown system, please specify WOLFRAM_PATH like:"
+    echo "\tWOLFRAM_PATH=/path/to/wolframengine_or_mathematica $0"
+    exit 1
+  fi
+fi
+
+WSPATH=$(find ${search_path} -name CompilerAdditions | grep WSTP)
+if [ ! -z $WSPATH ]; then
+  WSTP_PATH=$WSPATH make
+else
+  echo "CompilerAdditions not found, consider reporting a bug"
+  exit 1
+fi
+

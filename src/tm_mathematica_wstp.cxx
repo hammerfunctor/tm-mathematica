@@ -24,9 +24,15 @@
 #include <vector>
 #include <unistd.h>
 
-#define LOG_INPUTEXPR 0
 #define LOG_PKT 0
+#define LOG_RETURNTYPE 0
 #define LOG_RETURNSTRING 0
+
+void debug_string(const unsigned char* s) {
+#if LOG_RETURNSTRING
+  std::cerr << s << std::endl;
+#endif
+}
 
 constexpr auto preprint =
   "$PrePrint=Switch[#,"
@@ -225,6 +231,7 @@ public:
         std::cerr << "Unrecognized: " << pkt;
         break;
       }
+      std::cerr << std::endl;
 #endif
 
       WSNewPacket(lp);
@@ -246,8 +253,12 @@ public:
 
     switch ( (elem=WSGetNext(lp)) ) {
     case WSTKSTR:
-      //std::cerr << "WSTKSTR" << std::endl;
+#if LOG_RETURNTYPE
+      std::cerr << "WSTKSTR" << std::endl;
+#endif
+
       WSGetUTF8String(lp, &result, &length, &numofchar);
+      debug_string(result);
       if ( ! memcmp("%!PS", result, 4) ){
         // PS
         content.append(fmt_ps(result));
@@ -263,8 +274,12 @@ public:
       break;
 
     case WSTKSYM:
-      //std::cerr << "WSTKSYM" << std::endl;
+#if LOG_RETURNTYPE
+      std::cerr << "WSTKSYM" << std::endl;
+#endif
+
       WSGetUTF8String(lp, &result, &length, &numofchar);
+      debug_string(result);
       if ( ! (memcmp("$Failed", result, 7)) ) {
         // handle Symbol: $Failed
         content.append(fmt_verbatim("$Failed"));
