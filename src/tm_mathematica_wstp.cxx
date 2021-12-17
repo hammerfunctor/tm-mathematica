@@ -36,11 +36,25 @@ void debug_string(const unsigned char* s) {
 
 constexpr auto preprint =
   "$PrePrint=Switch[#,"
-    "_Graphics|_Graphics3D,TextForm[ExportString[#,\"EPS\"]],"
+    "_Graphics|_Graphics3D,ExportString[#,\"EPS\"],"
   //"String,TextForm[#],"
     "$Failed,$Failed,"
     "Null,Null,"
     "_,TextForm[TeXForm[#]]]&;";
+
+void filter(std::ostream& o, const unsigned char* s) {
+  size_t shift = 0;
+  char c;
+  const char* wierd = "\\\n \n>  ";
+
+  for(; (c=*(s+shift)) != '\0'; shift++) {
+    if ( (c=='\\') && (!memcmp(wierd, s+shift, 7)) ) {
+      shift += 6;
+    } else {
+      o << c;
+    }
+  }
+}
 
 //=========================== main class
 struct OutputItem {
@@ -119,7 +133,7 @@ public:
     std::string fname { "/tmp/mma_eps_" };
     fname.append(std::to_string(getpid()));
     fname.append(".eps");
-    f.open(fname, std::ios_base::out); f << s; f.close();
+    f.open(fname, std::ios_base::out); filter(f,s); f.close();
 
     std::ostringstream o {};
     o << DATA_BEGIN << "file:" << fname << "?width=0.618par" << DATA_END;
