@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# specify search path
 if [ ! -z ${WOLFRAM_PATH} ]; then
   search_path=$WOLFRAM_PATH
 else
@@ -15,9 +16,10 @@ else
   fi
 fi
 
-WSPATH=$(find ${search_path} -name CompilerAdditions | grep WSTP)
+# find compilation additions in search path
+export WSPATH=$(find ${search_path} -name CompilerAdditions | grep WSTP)
 if [ ! -z $WSPATH ]; then
-  WSTP_PATH=$WSPATH make
+  make
 else
   echo "CompilerAdditions not found, consider reporting a bug"
   exit 1

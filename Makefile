@@ -7,9 +7,9 @@
 #             see the file 'LICENSE', which is provided with this package.
 ###############################################################################
 
-WSTP_PATH := /usr/local/Wolfram/Mathematica/12.3/SystemFiles/Links/WSTP/DeveloperKit/Linux-x86-64/CompilerAdditions
-CXXFLAGS := -I$(WSTP_PATH) -L$(WSTP_PATH) -Wl,-rpath,$(WSTP_PATH)\
-						-lm -lrt -ldl -luuid -std=c++2a
+# WSPATH needed, which is compilation additions of Wolfram system
+CXXFLAGS = -lm -lrt -ldl -luuid -std=c++2a\
+					 -I$(WSPATH) -L$(WSPATH) -Wl,-rpath,$(WSPATH)
 
 ifeq ($(shell uname),Darwin)
 	CXXFLAGS += -Wl,-dead-strip -lWSTPi4
