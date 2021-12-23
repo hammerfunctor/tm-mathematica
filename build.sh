@@ -6,9 +6,11 @@ if [ ! -z ${WOLFRAM_PATH} ]; then
 else
   echo "WOLFRAM_PATH not specified"
   if [ $(uname) = "Linux" ]; then
-    search_path="/usr/local"
+    search_path=$(echo `realpath $(which math)` | sed -E 's/(.*)\/Executables.*/\1/')
+    echo "search compilation tools at '$search_path'"
   elif [ $(uname) = "Darwin" ]; then
-    search_path="/Applications/Mathematica"
+    search_path=$(echo `realpath $(which math)` | sed -E 's/(.*)\/Executables.*/\1/')
+    echo "search compilation tools at '$search_path'"
   else
     echo "Unknown system, please specify WOLFRAM_PATH like:"
     echo "\tWOLFRAM_PATH=/path/to/wolframengine_or_mathematica $0"
