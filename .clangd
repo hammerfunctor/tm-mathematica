@@ -1,2 +1,2 @@
 CompileFlags:
-  Add: -I/usr/local/Wolfram/Mathematica/12.3/SystemFiles/Links/WSTP/DeveloperKit/Linux-x86-64/CompilerAdditions
+  Add: -I/usr/local/Wolfram/Mathematica/13.0/SystemFiles/Links/WSTP/DeveloperKit/Linux-x86-64/CompilerAdditions
