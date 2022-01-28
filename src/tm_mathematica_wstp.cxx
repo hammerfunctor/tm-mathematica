@@ -10,6 +10,12 @@
  * in the root directory or <http://www.gnu.org/licenses/gpl-3.0.html>.
  ******************************************************************************/
 
+/*
+ * Wolfram documentation:
+ * `JLink/tutorial/WritingJavaProgramsThatUseTheWolframLanguage`
+ * `tutorial/RunningTheWolframSystemFromWithinAnExternalProgra`
+ */
+
 #include "wstp.h"
 
 #include <cstddef>
