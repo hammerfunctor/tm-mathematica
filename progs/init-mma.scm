@@ -31,7 +31,7 @@
         (string-append "wolframscript " boot))))
 
 (plugin-configure mma
-  (:winpath "mma" "bin")
+  (:winpath "wolframscript" ".")
   (:require (url-exists-in-path? "wolframscript"))
   (:serializer ,mma-serialize)
   (:launch ,(mma-launcher))
