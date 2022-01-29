@@ -20,7 +20,7 @@ verbatim[params_]:=markup["utf8:",params]
 ps[params_]:=markup["ps:",params]
 svg[g_]:=Module[{fname},
   fname=FileNameJoin[{$TemporaryDirectory,"tm_figure_"<>ToString[$SessionID]<>".svg"}];
-  Export[fname,g];
+  Export[fname,g];Pause[0.1];(* Wait for IO *)
   markup["file:",fname<>"?width="<>width]]
 
 inputPrompt[i_:""]:=latex@prompt["\\pink In["<>ToString[i]<>"]:= {}"]
@@ -50,7 +50,7 @@ repl[s_String]:=Module[{in,out,next},
   widthTemp = If[Length[magicline]==1, width, magicline[[2]]];
   Block[{width=widthTemp},
     While[!SameQ[next=Read[inStream],EndOfFile],
-      fmtPrint[next]]]
+      fmtPrint[next]]];
   ]
 
 (* Main Loop *)

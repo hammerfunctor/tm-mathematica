@@ -11,6 +11,8 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(use-modules (dynamic session-edit) (dynamic program-edit))
+
 (define (mma-serialize lan t)
     (with u (pre-serialize lan t)
       (with s (texmacs->code (stree->tree u) "SourceCode")
@@ -36,7 +38,8 @@
   (:serializer ,mma-serialize)
   (:launch ,(mma-launcher))
   (:tab-completion #t)
-  (:session "mma"))
+  (:session "mma")
+  (:script "mma"))
 
-(when (supports-mma?)
-  (plugin-input-converters mma))
+;;(when (supports-mma?)
+;;  (plugin-input-converters mma))
