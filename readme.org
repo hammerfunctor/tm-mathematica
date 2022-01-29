@@ -32,8 +32,8 @@ since each time codes are rerun, indices will most probably change.)
 
 There are two versions of this plugin. One (~main~ branch) is implemented in cpp utilizing the WSTP interface,
 the other (~wolframscript~ branch) is implemented in Wolfram language and run as a wolfram script. The
-first one has interactive features like ~%~ as last output, while the second one require no cpp compilation
-toolchains.
+first one has interactive features like ~%~ as last output, while the second one works out of the box
+and require no cpp compilation toolchain.
 
 
 *** ~main~ branch
@@ -52,11 +52,24 @@ Confirm the directory of ~math~ is in ~PATH~,  type ~which math~ to check it. Th
 If no error is reported, then next time when you start TeXmacs, this plugin will be available.
 
 *** ~wolframscript~ branch
-On Windows, you need to add the directory of ~wolframscript.exe~ to environment variable ~Path~. It may be
-~C:\Program Files\Wolfram Research\Mathematica\13.0\~ for Mathematica and ~C:\Program Files\Wolfram Research\WolframScript\~
-for WolframEngine (select to enable the extra component wolframscript when installing WolframEngine).
+On Windows, you need to add the directory of ~wolframscript.exe~ to environment variable ~Path~. It may be like
+~C:\Program Files\Wolfram Research\Mathematica\13.0\~ for Mathematica
+and ~C:\Program Files\Wolfram Research\WolframScript\~ for WolframEngine
+(select to enable the extra component wolframscript when installing WolframEngine).
 
-On Linux and macOS, find the directory of ~wolframscript~ and add it to ~PATH~.
+Then enter following in CMD (~git~ is needed. If you don't have git, click in github page to switch to ~wolframscript~
+branch, download it as a zip file and put it in your TeXmacs plugin directory and name the directory ~mma~)
+#+begin_src sh
+  cd %AppData%/TeXmacs/plugins
+  git clone https://github.com/hammerfunctor/tm-mathematica mma
+  cd mma && git checkout wolframscript
+#+end_src
 
+On Linux and macOS, find the directory of ~wolframscript~ and add it to ~PATH~. Then
+#+begin_src sh
+  cd $HOME/.TeXmacs/plugins
+  git clone https://github.com/hammerfunctor/tm-mathematica mma
+  cd mma && git checkout wolframscript
+#+end_src
 
 ** Have fun!
