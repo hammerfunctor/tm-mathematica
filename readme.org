@@ -1,0 +1,76 @@
+* A Mathematica plugin for TeXmacs
+
+This project provides the functionality to use [[https://texmacs.org][GNU TeXmacs]] as the frontend of Wolfram language
+
+  #+CAPTION: Some demos!
+  [[./demo.png]]
+
+**  UPDATE
+*** 2021/12/06
+
+Outputname prefix like ~Out[12]=~ now will not be displayed only when there is one single return,
+which is really useful for that wrapped in a executable fold, e.g. a figure in the demo.
+
+Added a ~python~ script to dump all codes within ~mma~ sessions of a ~.tm~ file to a ~.m~ file. This will be
+helpful if you want to collect all codes for some specific use case. Run:
+#+begin_src sh
+  # if path of this script is already added to $PATH
+  # use an alias or different link name if you like
+  tmdumpcode <path to .tm file like rep.tm> [<target .m file like rep-out.m>]
+#+end_src
+Then ~rep-out.m~ (or ~rep.m~ if no target is specified) will appear in your current directory.
+
+~⚠️NOTE: This will override your target file. Be careful!~
+*** 2021/11/25
+
+One night I wanted to neither read books nor sleep, then I rewrote this project.
+Now =%= like that in notebook frontend is supported, and, the logic of format and inter-communication
+is clarified. (Though it's possible to write =%12=, I personally recommend you not to do like this,
+since each time codes are rerun, indices will most probably change.)
+
+** Installation and Use
+
+There are two versions of this plugin. One (~main~ branch) is implemented in cpp utilizing the WSTP interface,
+the other (~wolframscript~ branch) is implemented in Wolfram language and run as a wolfram script. The
+first one has interactive features like ~%~ as last output, while the second one works out of the box
+and require no cpp compilation toolchain.
+
+Check ~wolframscript~ branch for details.
+
+*** ~main~ branch
+
+*NOTE: This one is only tested on Linux (it may work on macOS).*
+
+To use this plugin, you need compile it manually since it rely on the WSTP library shipped with your Wolfram.
+Confirm the directory of ~math~ is in ~PATH~,  type ~which math~ to check it. Then:
+
+#+begin_src sh
+  cd $HOME/.TeXmacs/plugins/
+  git clone https://github.com/hammerfunctor/tm-mathematica mma
+  ./build.sh
+#+end_src
+
+If no error is reported, then next time when you start TeXmacs, this plugin will be available.
+
+*** ~wolframscript~ branch
+On Windows, you need to add the directory of ~wolframscript.exe~ to environment variable ~Path~. It may be like
+~C:\Program Files\Wolfram Research\Mathematica\13.0\~ for Mathematica
+and ~C:\Program Files\Wolfram Research\WolframScript\~ for WolframEngine
+(select to enable the extra component wolframscript when installing WolframEngine).
+
+Then enter following in CMD (~git~ is needed. If you don't have git, click in github page to switch to ~wolframscript~
+branch, download it as a zip file and put it in your TeXmacs plugin directory and name the directory ~mma~)
+#+begin_src sh
+  cd %AppData%/TeXmacs/plugins
+  git clone https://github.com/hammerfunctor/tm-mathematica mma
+  cd mma && git checkout wolframscript
+#+end_src
+
+On Linux and macOS, find the directory of ~wolframscript~ and add it to ~PATH~. Then
+#+begin_src sh
+  cd $HOME/.TeXmacs/plugins
+  git clone https://github.com/hammerfunctor/tm-mathematica mma
+  cd mma && git checkout wolframscript
+#+end_src
+
+** Have fun!
