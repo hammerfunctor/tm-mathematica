@@ -61,7 +61,7 @@ and ~C:\Program Files\Wolfram Research\WolframScript\~ for WolframEngine
 Then enter following in CMD (~git~ is needed. If you don't have git, click in github page to switch to ~wolframscript~
 branch, download it as a zip file and put it in your TeXmacs plugin directory and name the directory ~mma~)
 #+begin_src sh
-  cd %AppData%/TeXmacs/plugins
+  cd %AppData%/Roaming/TeXmacs/plugins
   git clone https://github.com/hammerfunctor/tm-mathematica mma
   cd mma && git checkout wolframscript
 #+end_src
