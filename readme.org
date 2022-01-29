@@ -35,6 +35,7 @@ the other (~wolframscript~ branch) is implemented in Wolfram language and run as
 first one has interactive features like ~%~ as last output, while the second one works out of the box
 and require no cpp compilation toolchain.
 
+Check ~wolframscript~ branch for details.
 
 *** ~main~ branch
 
