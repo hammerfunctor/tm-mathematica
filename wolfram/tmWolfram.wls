@@ -17,7 +17,10 @@ markup[key_,params_,delim_:""]={dataBegin,key,delim,params,delim,dataEnd}
 latex[params_,delim_:""]:=markup["latex: ",params,delim]
 prompt[params_]:=markup["prompt#",params]
 verbatim[params_]:=markup["utf8:",params]
-ps[params_]:=markup["ps:",params]
+ps[g_]:=Module[{fname},
+  fname=FileNameJoin[{$TemporaryDirectory,"tm_figure_"<>ToString[$SessionID]<>".eps"}];
+  Export[fname,g];Pause[0.1];(* Wait for IO *)
+  markup["file:",fname<>"?width="<>width]]
 svg[g_]:=Module[{fname},
   fname=FileNameJoin[{$TemporaryDirectory,"tm_figure_"<>ToString[$SessionID]<>".svg"}];
   Export[fname,g];Pause[0.1];(* Wait for IO *)
@@ -26,9 +29,11 @@ svg[g_]:=Module[{fname},
 inputPrompt[i_:""]:=latex@prompt["\\pink In["<>ToString[i]<>"]:= {}"]
 
 (* Format the output *)
+(* glyphs of svg exported from Graphics are undefined in texmacs. maybe bug of qt *)
 format[Null]                    = Null
 format[$Failed]                 = $Failed
-format[g_Graphics|g_Graphics3D] := tostring@svg@g
+format[g_Graphics3D]            := tostring@svg@g
+format[g_Graphics]              := tostring@ps@g
 format[t_]                      := tostring@latex[TeXForm[t],"$"]
 
 fmtPrint[Null] = Null
