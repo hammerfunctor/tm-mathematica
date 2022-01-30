@@ -74,6 +74,9 @@ TmRepl[s_String] := Module[{in,out,next},
   ]
 
 End[]
+
+Protect[InputPrompt,InputPromptString,Prelude,TmRepl,TmFormat]
+
 EndPackage[]
 
 (* Main Loop *)
