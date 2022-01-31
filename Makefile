@@ -8,13 +8,12 @@
 ###############################################################################
 
 # WSPATH needed, which is compilation additions of Wolfram system
-CXXFLAGS = -lm -lrt -ldl -luuid -std=c++2a\
-					 -I$(WSPATH) -L$(WSPATH) -Wl,-rpath,$(WSPATH)
+CXXFLAGS = -I$(WSPATH) -L$(WSPATH) -Wl,-rpath,$(WSPATH) -std=c++2a
 
 ifeq ($(shell uname),Darwin)
-	CXXFLAGS += -Wl,-dead-strip -lWSTPi4
+	CXXFLAGS += -lWSTPi4 -lc++ -framework Foundation
 else ifeq ($(shell uname),Linux)
-	CXXFLAGS += -Wl,--gc-sections -lpthread -lWSTP64i4
+	CXXFLAGS += -Wl,--gc-sections -lpthread -lWSTP64i4 -lrt -lm -ldl -luuid 
 endif
 
 all: bin/tm_mma.bin

@@ -4,12 +4,20 @@
 if [ ! -z ${WOLFRAM_PATH} ]; then
   search_path=$WOLFRAM_PATH
 else
+
   echo "WOLFRAM_PATH not specified"
+  bindir=$(which WolframKernel)
+  if [ -L $bindir ]; then
+    realbinpath=`readlink -n $bindir`
+  else
+    realbinpath=$bindir
+  fi
+
   if [ $(uname) = "Linux" ]; then
-    search_path=$(echo `realpath $(which math)` | sed -E 's/(.*)\/Executables.*/\1/')
+    search_path=$(echo $realbinpath | sed -E 's/(.*)\/Executables.*/\1/')
     echo "search compilation tools at '$search_path'"
   elif [ $(uname) = "Darwin" ]; then
-    search_path=$(echo `realpath $(which math)` | sed -E 's/(.*)\/Executables.*/\1/')
+    search_path=$(echo $realbinpath| sed -E 's/(.*)\/Contents.*/\1/')
     echo "search compilation tools at '$search_path'"
   else
     echo "Unknown system, please specify WOLFRAM_PATH like:"
@@ -19,7 +27,16 @@ else
 fi
 
 # find compilation additions in search path
-export WSPATH=$(find ${search_path} -name CompilerAdditions | grep WSTP)
+if [ $(uname)=="Darwin" ]; then
+  if [ -z $(echo `uname -m` | grep x86) ]; then
+    ARCH=ARM
+  else
+    ARCH=x86
+  fi
+fi
+
+export WSPATH=$(find ${search_path} -name CompilerAdditions | grep WSTP | grep $ARCH)
+echo "Use compilation stuffs in: $WSPATH"
 if [ ! -z $WSPATH ]; then
   make
 else
