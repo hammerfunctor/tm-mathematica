@@ -17,7 +17,7 @@
         (string-append s "\0"))))
 
 (plugin-configure mma
-  (:require (url-exists? (url-unix "$PATH" "math")))
+  (:require (url-exists-in-path? "WolframKernel"))
   (:serializer ,mma-serialize)
   (:launch "tm_mma.bin")
   (:session "Mathematica - CXX"))
