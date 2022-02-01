@@ -37,17 +37,23 @@ and require no cpp compilation toolchain.
 
 Check ~wolframscript~ branch for details.
 
+TeXmacs use the dirname in ~plugins~ to mark the name of a plugin. To use two branches simultaneously, one to hold
+one copy of files and manually rename it. Say you will name it ~myplugin~, confirm:
+1. dirname in ~$HOME/.TeXmacs/plugins~ to be ~myplugin~ (mma by default)
+2. filename in ~$HOME/.TeXmacs/plugins/myplugin/progs~ to be init-myplugin.scm (init-mma.scm by default)
+3. names of functions in ~init-myplugin.scm~ (look into the code and you will figure out what to do)
 *** ~main~ branch
 
-*NOTE: This one is only tested on Linux (it may work on macOS).*
+*NOTE: This one is tested against ArchLinux and OSX 10.15.*
 
 To use this plugin, you need compile it manually since it rely on the WSTP library shipped with your Wolfram.
-Confirm the directory of ~math~ is in ~PATH~,  type ~which math~ to check it. Then:
+C++ compilation toolchain is required.
+Confirm the directory of ~WolframKernel~ is in ~PATH~,  type ~which WolframKernel~ to check it. Then:
 
 #+begin_src sh
   cd $HOME/.TeXmacs/plugins/
-  git clone https://github.com/hammerfunctor/tm-mathematica mma
-  ./build.sh
+  git clone https://github.com/hammerfunctor/tm-mathematica mma && cd mma
+  ./build.sh # or: `WOLFRAM_PATH=/path/to/wolframproduct ./build`
 #+end_src
 
 If no error is reported, then next time when you start TeXmacs, this plugin will be available.
@@ -72,5 +78,14 @@ On Linux and macOS, find the directory of ~wolframscript~ and add it to ~PATH~. 
   git clone https://github.com/hammerfunctor/tm-mathematica mma
   cd mma && git checkout wolframscript
 #+end_src
+
+**** Troubleshooting
+On Windows once you add the dir to environment variable PATH, texmacs will correctly recognize this plugin after it
+read PATH.
+
+For OSX and Linux the ~PATH~ texmacs get to know is a bit tricky. On Linux the login-shell init file, say =$HOME/.zprofile=
+(if you use zsh) is perhaps respected. You can add one line =export PATH=$PATH:/path/to/wolframscript= to your ~.zprofile~.
+On OSX texmacs is aware of the existence of ~.zprofile~ if you start it from terminal, while not if you run texmacs from
+spotlight search. One workaround is to link ~/usr/local/bin/wolframscript~ to ~/path/to/wolframscript~, which is always in ~PATH~.
 
 ** Have fun!
