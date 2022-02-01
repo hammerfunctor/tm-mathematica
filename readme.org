@@ -37,8 +37,8 @@ and require no cpp compilation toolchain.
 
 Check ~wolframscript~ branch for details.
 
-TeXmacs use the dirname in ~plugins~ to mark the name of a plugin. To use two branches simultaneously, one to hold
-one copy of files and manually rename it. Say you will name it ~myplugin~, confirm:
+TeXmacs use the dirname in ~plugins~ to mark the name of a plugin. To use two branches simultaneously, you
+need to hold one copy of files and manually rename something. Say you will name it ~myplugin~, confirm:
 1. dirname in ~$HOME/.TeXmacs/plugins~ to be ~myplugin~ (mma by default)
 2. filename in ~$HOME/.TeXmacs/plugins/myplugin/progs~ to be init-myplugin.scm (init-mma.scm by default)
 3. names of functions in ~init-myplugin.scm~ (look into the code and you will figure out what to do)
