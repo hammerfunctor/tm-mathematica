@@ -1,6 +1,6 @@
 <TeXmacs|2.1>
 
-<style|<tuple|mynotes|pine>>
+<style|<tuple|generic|pine>>
 
 <\body>
   Some examples:
