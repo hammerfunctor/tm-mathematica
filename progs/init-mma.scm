@@ -29,8 +29,8 @@
 (define (mma-launcher)
   (with boot (raw-quote (mma-entry))
     (if (url-exists-in-path? "wolframscript")
-        (string-append "wolframscript " boot)
-        (string-append "wolframscript " boot))))
+        (string-append "wolframscript -f" boot)
+        (string-append "wolframscript -f" boot))))
 
 (plugin-configure mma
   (:winpath "wolframscript" ".")
