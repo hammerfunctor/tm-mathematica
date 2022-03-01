@@ -55,20 +55,24 @@ fmtPrint[Null] = Null
 fmtPrint[out_] := Print[TmFormat[out]]
 
 magicLine[line_String] /; !StringStartsQ[line,"% "] := {line}
-magicLine[line_String] := Module[{widthRegex, w},
-  widthRegexSub = RegularExpression["-width\\s+([a-zA-Z0-9.]+)\\s*"]->"$1";
+magicLine[line_String] := Module[{widthRegexSub, w, magicLineParams=<||>},
+  (* width *)
+  widthRegexSub = RegularExpression["-width\\s+([a-zA-Z0-9.]+)"]->"$1";
   w = StringCases[line, widthRegexSub];
-  Join[{""},w]
+  magicLineParams["width"] = If[Length[w]==0, width, w[[1]]];
+
+  magicLineParams
 ]
 
 TmRepl[objs__] := TmRepl[tostring[objs]]
-TmRepl[s_String] := Module[{in,out,next},
-  magicline = magicLine[InputString[s]<>"\n"];
-  in = magicline[[1]];
+TmRepl[s_String] := Module[{in,out,next,buf={},magicLineParams},
+  magicLineParams = magicLine[InputString[s]];
+
+  in = "";
   in = FixedPoint[If[(next=InputString[""])!="EndOfFile", #<>next<>"\n", #]&, in];
   inStream=StringToStream[in];
 
-  widthTemp = If[Length[magicline]==1, width, magicline[[2]]];
+  widthTemp = magicLineParams["width"];
   Block[{width=widthTemp},
     While[!SameQ[next=Read[inStream],EndOfFile],
       fmtPrint[next]]];
