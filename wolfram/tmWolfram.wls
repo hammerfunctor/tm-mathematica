@@ -54,7 +54,7 @@ TmFormat[t_]                      := tostring@latex[TeXForm[t],"$"]
 fmtPrint[Null] = Null
 fmtPrint[out_] := Print[TmFormat[out]]
 
-magicLine[line_String] /; !StringStartsQ[line,"% "] := {line}
+magicLine[line_String] /; !StringStartsQ[line,"% "] := line
 magicLine[line_String] := Module[{widthRegexSub, w, magicLineParams=<||>},
   (* width *)
   widthRegexSub = RegularExpression["-width\\s+([a-zA-Z0-9.]+)"]->"$1";
@@ -65,19 +65,21 @@ magicLine[line_String] := Module[{widthRegexSub, w, magicLineParams=<||>},
 ]
 
 TmRepl[objs__] := TmRepl[tostring[objs]]
-TmRepl[s_String] := Module[{in,inStream,next,buf={},magicLineResult,widthTemp},
+TmRepl[s_String] := Module[{magicLineResult,widthTemp,next,buf={},inStream},
   magicLineResult = magicLine[InputString[s]];
   Switch[magicLineResult,
-    _String, AppendTo[buf,magicLineResult],
+    _String, 
+      AppendTo[buf,magicLineResult];
+      AppendTo[buf,"\n"];
+      widthTemp = width;,
     _Association,
       widthTemp = magicLineResult["width"];
     ];
 
-  in = "";
-  in = FixedPoint[If[(next=InputString[""])!="EndOfFile", #<>next<>"\n", #]&, in];
-  inStream=StringToStream[in];
-
-  (*FixedPoint[If[(next=InputString[""])!="EndOfFile", AppendTo[buf,*)
+  While[(next=InputString[""]) != "EndOfFile",
+    AppendTo[buf, next];
+    AppendTo[buf, "\n"];];
+  inStream = StringToStream[StringJoin[buf]];
 
   Block[{width=widthTemp},
     While[!SameQ[next=Read[inStream],EndOfFile],
