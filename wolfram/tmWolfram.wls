@@ -48,6 +48,7 @@ TmFormat[Null]                    = Null
 TmFormat[$Failed]                 = $Failed
 TmFormat[g_Graphics3D]            := tostring@svg@g
 TmFormat[g_Graphics]              := tostring@ps@g
+TmFormat[g_Legended]              := tostring@ps@g
 TmFormat[t_]                      := tostring@latex[TeXForm[t],"$"]
 
 fmtPrint[Null] = Null
