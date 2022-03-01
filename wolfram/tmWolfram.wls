@@ -65,14 +65,20 @@ magicLine[line_String] := Module[{widthRegexSub, w, magicLineParams=<||>},
 ]
 
 TmRepl[objs__] := TmRepl[tostring[objs]]
-TmRepl[s_String] := Module[{in,out,next,buf={},magicLineParams},
-  magicLineParams = magicLine[InputString[s]];
+TmRepl[s_String] := Module[{in,inStream,next,buf={},magicLineResult,widthTemp},
+  magicLineResult = magicLine[InputString[s]];
+  Switch[magicLineResult,
+    _String, AppendTo[buf,magicLineResult],
+    _Association,
+      widthTemp = magicLineResult["width"];
+    ];
 
   in = "";
   in = FixedPoint[If[(next=InputString[""])!="EndOfFile", #<>next<>"\n", #]&, in];
   inStream=StringToStream[in];
 
-  widthTemp = magicLineParams["width"];
+  (*FixedPoint[If[(next=InputString[""])!="EndOfFile", AppendTo[buf,*)
+
   Block[{width=widthTemp},
     While[!SameQ[next=Read[inStream],EndOfFile],
       fmtPrint[next]]];
