@@ -1,27 +1,33 @@
 #!/bin/env wolframscript
 
 BeginPackage["TeXmacsWolfram`"]
-
 InputPrompt::usage        = "Generate a list of objects to print as input prompt"
 InputPromptString::usage  = "Generate a string to print as input prompt"
 Prelude::usage            = "Prelude message"
 TmRepl::usage             = "Receive something as prompt, then read-eval-print"
 TmFormat::usage           = "Format an expression to an output string"
 
-Begin["`Private`"]
 
-dataBegin=FromCharacterCode[2]
-dataEnd=FromCharacterCode[5]
+Begin["`Private`"]
+dataBegin = FromCharacterCode[2]
+dataEnd = FromCharacterCode[5]
+dataEscape = FromCharacterCode[27]
+dataCommand = FromCharacterCode[16]
 
 width="0.618par"
 
-stdout=OutputStream["stdout",1]
-stderr=OutputStream["stderr",2]
-System`$Messages={stderr}
+stdout = OutputStream["stdout",1]
+stderr = OutputStream["stderr",2]
+System`$Messages = { stderr }
 
-tostring[s_]:=ToString[s]
-tostring[s_List]:=StringJoin@@ToString/@Flatten[s]
-tostring[s__]:=tostring[List[s]]
+tmEscape[data_String] := StringReplace[data, {"'"->"''", "\.02"->"'\.02", "\.05"->"'\.05"}]
+tmOut[data_String] := WriteString[stdout, data]
+tmOut[header_String, data_String] := WriteString[stdout, dataBegin, header, data, dataEnd]
+tmErr[header_String, data_String] := WriteString[stderr, dataBegin, header, data, dataEnd]
+
+tostring[s_] := ToString[s]
+tostring[s_List] := StringJoin@@ToString/@Flatten[s]
+tostring[s__] := tostring[List[s]]
 
 markup[key_,params_,delim_:""]={dataBegin,key,delim,params,delim,dataEnd}
 latex[params_,delim_:""]:=markup["latex: ",params,delim]
@@ -54,6 +60,14 @@ TmFormat[t_]                      := tostring@latex[TeXForm[t],"$"]
 fmtPrint[Null] = Null
 fmtPrint[out_] := Print[TmFormat[out]]
 
+sendimage[ext_String, imgFmt_String, g_] := Module[{sdata,shexdata},
+  sdata = ExportString[g,imgFmt];
+  shexdata = StringJoin[IntegerString[#, 16] & /@ ToCharacterCode[sdata]];
+  (* to send it *)
+  StringJoin["texmacs:<image|<tuple|<#",shexdata,">|", CreateUUID["mma-output-"],".",ext, ">|",width,"|||>"]
+]
+
+
 magicLine[line_String] /; !StringStartsQ[line,"% "] := line
 magicLine[line_String] := Module[{widthRegexSub, w, magicLineParams=<||>},
   (* width *)
@@ -65,21 +79,21 @@ magicLine[line_String] := Module[{widthRegexSub, w, magicLineParams=<||>},
 ]
 
 TmRepl[objs__] := TmRepl[tostring[objs]]
-TmRepl[s_String] := Module[{magicLineResult,widthTemp,next,buf={},inStream},
+TmRepl[s_String] := Module[{magicLineResult,widthTemp,next,inbuf={},inStream,outbuf={}},
   magicLineResult = magicLine[InputString[s]];
   Switch[magicLineResult,
     _String, 
-      AppendTo[buf,magicLineResult];
-      AppendTo[buf,"\n"];
+      AppendTo[inbuf,magicLineResult];
+      AppendTo[inbuf,"\n"];
       widthTemp = width;,
     _Association,
       widthTemp = magicLineResult["width"];
     ];
 
   While[(next=InputString[""]) != "EndOfFile",
-    AppendTo[buf, next];
-    AppendTo[buf, "\n"];];
-  inStream = StringToStream[StringJoin[buf]];
+    AppendTo[inbuf, next];
+    AppendTo[inbuf, "\n"];];
+  inStream = StringToStream[StringJoin[inbuf]];
 
   Block[{width=widthTemp},
     While[!SameQ[next=Read[inStream],EndOfFile],
