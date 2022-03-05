@@ -2,10 +2,10 @@
 
 BeginPackage["TeXmacsWolfram`"]
 InputPrompt::usage        = "Generate a list of objects to print as input prompt"
-InputPromptString::usage  = "Generate a string to print as input prompt"
 Prelude::usage            = "Prelude message"
 TmRepl::usage             = "Receive something as prompt, then read-eval-print"
 TmFormat::usage           = "Format an expression to an output string"
+TmOut::usage              = "Write arguments to stdout"
 
 
 Begin["`Private`"]
@@ -14,73 +14,71 @@ dataEnd = FromCharacterCode[5]
 dataEscape = FromCharacterCode[27]
 dataCommand = FromCharacterCode[16]
 
+verbatim = "verbatim:"
+texmacs = "texmacs:"
+
 width="0.618par"
 
 stdout = OutputStream["stdout",1]
 stderr = OutputStream["stderr",2]
 System`$Messages = { stderr }
 
-tmEscape[data_String] := StringReplace[data, {"'"->"''", "\.02"->"'\.02", "\.05"->"'\.05"}]
-tmOut[data_String] := WriteString[stdout, data]
-tmOut[header_String, data_String] := WriteString[stdout, dataBegin, header, data, dataEnd]
+tmEscape[data_String] := StringReplace[data, {
+  dataEscape -> dataEscape <> dataEscape,
+  dataBegin -> dataEscape <> dataBegin,
+  dataEnd -> dataEscape <> dataEnd}]
+
+TmOut[Null] = Null
+TmOut[data_] := WriteString[stdout, data]
+TmOut[header_String, data_String] := WriteString[stdout, dataBegin, header, data, dataEnd]
+TmOut[header_String, List[data__String]] := WriteString[stdout, dataBegin, header, data, dataEnd]
+TmOut[header1_String, header2_String, List[data__String]] := WriteString[stdout, dataBegin,header1,dataBegin,header2,data,dataEnd,dataEnd]
+
+tmErr[data_] := WriteString[stderr, ToString[data]]
 tmErr[header_String, data_String] := WriteString[stderr, dataBegin, header, data, dataEnd]
 
-tostring[s_] := ToString[s]
-tostring[s_List] := StringJoin@@ToString/@Flatten[s]
-tostring[s__] := tostring[List[s]]
+tmCons[header_String, data_] := StringJoin[dataBegin, header, ToString[data], dataEnd]
 
-markup[key_,params_,delim_:""]={dataBegin,key,delim,params,delim,dataEnd}
-latex[params_,delim_:""]:=markup["latex: ",params,delim]
-prompt[params_]:=markup["prompt#",params]
-verbatim[params_]:=markup["utf8:",params]
-ps[g_]:=Module[{fname},
-  fname=FileNameJoin[{$TemporaryDirectory,"tm_figure_"<>ToString[$SessionID]<>".eps"}];
-  Export[fname,g];Pause[0.1];(* Wait for IO *)
-  markup["file:",fname<>"?width="<>width]]
-svg[g_]:=Module[{fname},
-  fname=FileNameJoin[{$TemporaryDirectory,"tm_figure_"<>ToString[$SessionID]<>".svg"}];
-  Export[fname,g];Pause[0.1];(* Wait for IO *)
-  markup["file:",fname<>"?width="<>width]]
+tmBegin[] := WriteString[stdout, dataBegin, verbatim]
+tmEnd[] := WriteString[stdout, dataEnd]
 
-InputPrompt[i_]:=latex@prompt["\\pink In["<>ToString[i]<>"]:= {}"]
-InputPromptString[i_] := tostring[InputPrompt[i]]
-Prelude = verbatim@"Use Wolfram language in GNU TeXmacs
+
+InputPrompt[i_] := TmOut["latex:", "prompt#", {"\\pink In[", ToString[i], "]:= {}"}]
+
+Prelude = tmCons["verbatim:", "Use Wolfram language in GNU TeXmacs
 Created by Hammer Hu, implemented in Wolfram, mma by default
-Welcome to star and fork it at https://github.com/hammerfunctor/tm-mathematica"
+Welcome to star and fork it at https://github.com/hammerfunctor/tm-mathematica"]
 
 (* Format the output *)
 (* glyphs of svg exported from Graphics are undefined in texmacs. maybe bug of qt *)
+
 TmFormat[Null]                    = Null
 TmFormat[$Failed]                 = $Failed
-TmFormat[g_Graphics3D]            := tostring@svg@g
-TmFormat[g_Graphics]              := tostring@ps@g
-TmFormat[g_Legended]              := tostring@ps@g
-TmFormat[t_]                      := tostring@latex[TeXForm[t],"$"]
+TmFormat[g_Graphics]              := sendimage["ps", "EPS", g]
+TmFormat[g_Graphics3D]            := sendimage["svg", "SVG", g]
+TmFormat[g_Legended]              := sendimage["ps", "EPS", g]
+TmFormat[t_]                      := TmOut["latex:","$"<>ToString[TeXForm[t]]<>"$"]
 
-fmtPrint[Null] = Null
-fmtPrint[out_] := Print[TmFormat[out]]
-
-sendimage[ext_String, imgFmt_String, g_] := Module[{sdata,shexdata},
+sendimage[ext_String, imgFmt_String, g_] := Module[{sdata,shexdata,tree},
   sdata = ExportString[g,imgFmt];
-  shexdata = StringJoin[IntegerString[#, 16] & /@ ToCharacterCode[sdata]];
-  (* to send it *)
-  StringJoin["texmacs:<image|<tuple|<#",shexdata,">|", CreateUUID["mma-output-"],".",ext, ">|",width,"|||>"]
+  shexdata = StringJoin[IntegerString[#, 16, 2] & /@ ToCharacterCode[sdata]]; (* pad it to length 2 !!! *)
+  (* construct the tree and send it *)
+  tree = StringJoin["<image|<tuple|<#",shexdata,">|", CreateUUID["mma-output-"]<>"."<>ext ,">|",width,"|||>"];
+  TmOut[texmacs, tmEscape[tree]];
 ]
-
 
 magicLine[line_String] /; !StringStartsQ[line,"% "] := line
 magicLine[line_String] := Module[{widthRegexSub, w, magicLineParams=<||>},
   (* width *)
   widthRegexSub = RegularExpression["-width\\s+([a-zA-Z0-9.]+)"]->"$1";
   w = StringCases[line, widthRegexSub];
-  magicLineParams["width"] = If[Length[w]==0, width, w[[1]]];
+  magicLineParams["width"] = If[Length[w]==0, width, If[NumberQ[ToExpression[w[[1]]]],w[[1]]<>"px",w[[1]]] ];
 
   magicLineParams
 ]
 
-TmRepl[objs__] := TmRepl[tostring[objs]]
-TmRepl[s_String] := Module[{magicLineResult,widthTemp,next,inbuf={},inStream,outbuf={}},
-  magicLineResult = magicLine[InputString[s]];
+TmRepl[] := Module[{magicLineResult,widthTemp,next,inbuf={},inStream},
+  magicLineResult = magicLine[InputString[""]];
   Switch[magicLineResult,
     _String, 
       AppendTo[inbuf,magicLineResult];
@@ -95,19 +93,28 @@ TmRepl[s_String] := Module[{magicLineResult,widthTemp,next,inbuf={},inStream,out
     AppendTo[inbuf, "\n"];];
   inStream = StringToStream[StringJoin[inbuf]];
 
+  tmBegin[];
   Block[{width=widthTemp},
     While[!SameQ[next=Read[inStream],EndOfFile],
-      fmtPrint[next]]];
+      TmOut[TmFormat[next]];
+      WriteString[stdout,"\n"]]];
+  tmEnd[];
   ]
 
 End[]
 
-Protect[InputPrompt,InputPromptString,Prelude,TmRepl,TmFormat]
-
+Protect[InputPrompt,Prelude,TmRepl,TmFormat,TmOut]
 EndPackage[]
+
+
+
+TmOut[Prelude]
 
 (* Main Loop *)
 Module[{i=1},
-  For[
-    TmRepl[Prelude,InputPrompt[i]]; i++, True, i++,
-    TmRepl[InputPromptString[i]]]]
+  While[True,
+    InputPrompt[i]; (* Print the prompt *)
+    TmRepl[];       (* Read input, evaluate and print the output *)
+    i++;
+  ]
+]
