@@ -46,11 +46,11 @@ tmEnd[] := WriteString[stdout, dataEnd]
 InputPrompt[i_] := TmOut["latex:", "prompt#", {"\\pink In[", ToString[i], "]:= {}"}]
 
 Prelude = tmCons["verbatim:", "Use Wolfram language in GNU TeXmacs
-Created by Hammer Hu, implemented in Wolfram, mma by default
-Welcome to star and fork it at https://github.com/hammerfunctor/tm-mathematica"]
+Created by Hammer Hu, implemented in Wolfram, named mma by default
+Star and fork it at https://github.com/hammerfunctor/tm-mathematica.git"]
 
 (* Format the output *)
-(* glyphs of svg exported from Graphics are undefined in texmacs. maybe bug of qt *)
+(* glyphs inside svg exported from Graphics are undefined in texmacs. maybe bug of qt *)
 
 TmFormat[Null]                    = Null
 TmFormat[$Failed]                 = $Failed
@@ -77,6 +77,10 @@ magicLine[line_String] := Module[{widthRegexSub, w, magicLineParams=<||>},
   magicLineParams
 ]
 
+emptyQ[x_Symbol] := SameQ[x, Null]
+emptyQ[x_String] := SameQ[x, ""]
+emptyQ[x_] := SameQ[ToString[x], ""]
+
 TmRepl[] := Module[{magicLineResult,widthTemp,next,inbuf={},inStream},
   magicLineResult = magicLine[InputString[""]];
   Switch[magicLineResult,
@@ -97,7 +101,7 @@ TmRepl[] := Module[{magicLineResult,widthTemp,next,inbuf={},inStream},
   Block[{width=widthTemp},
     While[!SameQ[next=Read[inStream],EndOfFile],
       TmOut[TmFormat[next]];
-      WriteString[stdout,"\n"]]];
+      If[!emptyQ[next], WriteString[stdout,"\n"]]]];
   tmEnd[];
   ]
 
