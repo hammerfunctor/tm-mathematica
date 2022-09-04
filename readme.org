@@ -88,11 +88,12 @@
     #+end_src
 
 **** Troubleshooting
-     On Windows once you add the dir to environment variable PATH, texmacs will correctly recognize this plugin after it
-     read PATH.
+     On Windows once you add the dir to environment variable PATH, texmacs will correctly recognize this plugin
+     after it read PATH.
 
      For OSX and Linux the ~PATH~ texmacs get to know is a bit tricky. On Linux the login-shell init file, say =$HOME/.zprofile=
-     (if you use zsh) is perhaps respected. You can add one line =export PATH=$PATH:/path/to/wolframscript= to your ~.zprofile~.
+     (if you use zsh) is perhaps respected. You can add one line =export PATH=$PATH:/path/to/wolframscript= to your ~.zprofile~
+     (or =.profile= if you don't use zsh).
      On OSX texmacs is aware of the existence of ~.zprofile~ if you start it from terminal, while not if you run texmacs from
      spotlight search. One workaround is to link ~/usr/local/bin/wolframscript~ to ~/path/to/wolframscript~, which is always in ~PATH~.
 
