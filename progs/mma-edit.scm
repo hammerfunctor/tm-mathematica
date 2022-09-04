@@ -17,6 +17,12 @@
 ;; (tm-define (kbd-variant t forward?)
 ;;   (:require (and (in-prog-mma?) (not (inside? 'session)))))
 
+;; Enable highlighting matching brackets
+(tm-define (notify-cursor-moved status)
+  (:require prog-highlight-brackets?)
+  (:mode in-prog-mma?)
+  (select-brackets-after-movement "([{" ")]}" "\\"))
+
 (tm-define (insert-return)
   (:mode in-prog-mma?)
   (insert-raw-return)
