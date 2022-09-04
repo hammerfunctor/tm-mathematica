@@ -100,15 +100,15 @@
       <center|<small|<\script-input|mma|default>
         Plot3D[
 
-        {Sqrt[3+4*Cos[y/2]*Cos[x*Sqrt[3]/2] + 2*Cos[y]],
+        \ \ {Sqrt[3+4*Cos[y/2]*Cos[x*Sqrt[3]/2] + 2*Cos[y]],
 
-        -Sqrt[3+4*Cos[y/2]*Cos[x*Sqrt[3]/2] + 2*Cos[y]]},
+        \ \ \ -Sqrt[3+4*Cos[y/2]*Cos[x*Sqrt[3]/2] + 2*Cos[y]]},
 
-        {x,-2Pi/Sqrt[3],2Pi/Sqrt[3]},
+        \ \ {x,-2Pi/Sqrt[3],2Pi/Sqrt[3]},
 
-        {y,-2Pi,2Pi},
+        \ \ {y,-2Pi,2Pi},
 
-        Axes-\<gtr\>True,ViewPoint-\<gtr\>{Pi,Pi/4,Pi/10}]
+        \ \ Axes-\<gtr\>True,ViewPoint-\<gtr\>{Pi,Pi/4,Pi/10}]
       </script-input|>>>
     </cell>>|<row|<\cell>
       <math|\<Downarrow\>>
@@ -136,7 +136,7 @@
   <\collection>
     <associate|magnification|1>
     <associate|page-height|auto>
-    <associate|page-medium|paper>
+    <associate|page-medium|automatic>
     <associate|page-orientation|landscape>
     <associate|page-screen-margin|true>
     <associate|page-type|a4>
