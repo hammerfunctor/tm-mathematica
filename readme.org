@@ -2,10 +2,6 @@
 
   This project provides the functionality to use [[https://texmacs.org][GNU TeXmacs]] as the frontend of Wolfram language.
 
-  Maintaining two branches is burdensome. Personally I don't use this branch anymore, so further
-  features to the branch =wolframscript= will not be ported to this branch. You can fork apply them
-  yourself if you want.
-
   #+CAPTION: Some demos!
   [[./demo.png]]
 
