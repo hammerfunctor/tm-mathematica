@@ -14,15 +14,15 @@
 (use-modules (dynamic session-edit) (dynamic program-edit))
 
 (define (mma-serialize lan t)
-    (with u (pre-serialize lan t)
-      (with s (texmacs->code (stree->tree u) "SourceCode")
-        (string-append s "\nEndOfFile\n"))))
+  (with u (pre-serialize lan t)
+    (with s (texmacs->code (stree->tree u) "SourceCode")
+      (string-append s "\nEndOfFile\n"))))
 ;;        (string-append s "\n"))))
 
 
 (define (mma-entry)
   (system-url->string
-    (if (url-exists? "$TEXMACS_HOME_PATH/plugins/mma/wolfram/tmWolfram.wls")
+   (if (url-exists? "$TEXMACS_HOME_PATH/plugins/mma/wolfram/tmWolfram.wls")
        "$TEXMACS_HOME_PATH/plugins/mma/wolfram/tmWolfram.wls"
        "$TEXMACS_PATH/plugins/mma/wolfram/tmWolfram.wls")))
 
@@ -41,5 +41,17 @@
   (:session "mma")
   (:script "mma"))
 
-;;(when (supports-mma?)
-;;  (plugin-input-converters mma))
+(texmacs-modes
+ (in-mma% (== (get-env "prog-language") "mma"))
+ (in-prog-mma% #t in-prog% in-mma%))
+
+;; to complete
+(lazy-keyboard (mma-edit) in-prog-mma?)
+
+(when (supports-mma?)
+  ;; (import-from (mma-menus))
+  ;; (lazy-input-converter (mma-input) mma)
+  (lazy-keyboard (mma-kbd) in-mma?)
+  ;; (plugin-approx-command-set! "mma" "") ; ?
+  )
+
