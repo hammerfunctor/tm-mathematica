@@ -29,12 +29,13 @@
 (define (mma-launcher)
   (with boot (raw-quote (mma-entry))
     (if (url-exists-in-path? "wolframscript")
-        (string-append "wolframscript -f" boot)
-        (string-append "wolframscript -f" boot))))
+        (string-append "wolframscript -f " boot)
+        (string-append "wolfram -script " boot))))
 
 (plugin-configure mma
   (:winpath "wolframscript" ".")
-  (:require (url-exists-in-path? "wolframscript"))
+  (:require (or (url-exists-in-path? "wolframscript")
+                (url-exists-in-path? "wolfram")))
   (:serializer ,mma-serialize)
   (:launch ,(mma-launcher))
   (:tab-completion #t)
