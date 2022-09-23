@@ -7,6 +7,17 @@
 
 **  UPDATE
 
+*** 2022/09/22
+    You can now enter math formulus in a mathematica session, type =$= followed by =tab= to enter math
+    environment! This is especially useful when you need to manuall do some manipulations on the
+    results returned by mathematica, or copy from your typed from somewhere else within TeXmacs.
+    A present only a limited set of math formulus can be remapped to mathematica functions. Look into
+    =mma-math-converter.scm= for details. Since all this function does is to map string snippet, it's hard
+    to define a standard remap rules set for everyone. Anyway, you can hack and tail it to your own use.
+
+    *NOTE:* You need to take care of what you type in a math environment. Basically the process is:
+    =math env -> texmacs routine -> string match and replace=, so use math env for formulus only if you have
+    little knowledge for TeXmacs internals and don't want to make your hand dirty.
 *** 2022/09/04
     Your codes now can be indented automatically.
 

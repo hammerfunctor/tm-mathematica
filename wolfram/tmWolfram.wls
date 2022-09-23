@@ -93,6 +93,23 @@ emptyQ[x_Symbol] := SameQ[x, Null]
 emptyQ[x_String] := SameQ[x, ""]
 emptyQ[x_] := SameQ[ToString[x], ""]
 
+(* Deal with link *)
+(* link = LinkLaunch[First@$CommandLine <> " -wstp"] *)
+readToEnd[link_LinkObject] := Module[{out = {}},
+  While[LinkReadyQ[link],
+    AppendTo[out, LinkRead[link]]];
+  out
+]
+readTillInPkt[link_LinkObject] := Module[{out = {}, next},
+  While[! LinkReadyQ[link], Pause[0.05]];
+  While[! SameQ[InputNamePacket,
+                Head[next = LinkRead[link]]],
+    AppendTo[out, next]];
+  out
+]
+handlePkt[TextPacket[cont_]] := TmObj["verbatim:",cont]
+
+(* REPL loop *)
 TmRepl[] := Module[{magicLineResult,widthTemp,next,inbuf={},inStream},
   magicLineResult = magicLine[InputString[""]];
   Switch[magicLineResult,
@@ -107,6 +124,7 @@ TmRepl[] := Module[{magicLineResult,widthTemp,next,inbuf={},inStream},
   While[(next=InputString[""]) != "EndOfFile",
     AppendTo[inbuf, next];
     AppendTo[inbuf, "\n"];];
+  (* WriteString[stderr, StringJoin[inbuf]]; *)
   inStream = StringToStream[StringJoin[inbuf]];
 
   tmBegin[];
