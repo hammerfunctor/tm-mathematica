@@ -37,4 +37,7 @@
   ("<mathi>" "I")
   ("<pi>" "Pi")
   ("<assign>" " := ")
+  ("<hbar>" "<#210F>") ;; literal ℏ will produce messy code
+  ;; ("<in>" "<#2208>") ;; ∈, correct default
+  ;; ("<bbb-R>" "Reals") ;; doesn't work
   )
