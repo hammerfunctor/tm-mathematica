@@ -7,12 +7,14 @@
 
 **  UPDATE
 
+*** 2023/02/10
+    Introduce some syntax highlight Elements.
 *** 2022/09/22
     You can now enter math formulus in a mathematica session, type =$= followed by =tab= to enter math
     environment! This is especially useful when you need to manually do some manipulations on the
     results returned by mathematica, or to copy from somewhere else within TeXmacs.
     At present only a limited set of math formulus can be remapped to mathematica functions. Look into
-    =mma-math-converter.scm= for details. Since all this function does is to map string snippet, it's hard
+    =mw-converter.scm= for details. Since all this function does is to map string snippet, it's hard
     to define a standard remap rules set for everyone. Anyway, you can hack and tailor it to your own
     use case.
 

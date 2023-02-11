@@ -42,6 +42,7 @@ TmOut[TmObj[header_String, List[data__String]]] :=
   WriteString[stdout, dataBegin, header, data, dataEnd];
 TmOut[TmObj[header1_String, header2_String, List[data__String]]] :=
   WriteString[stdout, dataBegin, header1, dataBegin, header2, data, dataEnd, dataEnd]
+TmOut[objs__TmObj] := Map[TmOut, List[objs]]
 
 tmErr[data_] := WriteString[stderr, ToString[data]]
 tmErr[TmObj[header_String, data_String]] :=
@@ -55,19 +56,25 @@ tmEnd[] := WriteString[stdout, dataEnd]
 InputPrompt[i_] := TmObj["latex:", "prompt#",
                          {"\\pink In[", ToString[i], "]:= {}"}]
 
-Prelude = TmObj["verbatim:", "Use Wolfram language in GNU TeXmacs
+Prelude = Sequence[
+  TmObj["verbatim:", "Use Wolfram language in GNU TeXmacs
 Created by Hammer Hu, implemented in Wolfram, named mma by default
-Star and fork it at https://github.com/hammerfunctor/tm-mathematica.git"]
+Star and fork it at "],
+  TmObj["texmacs:", "<hlink|\
+https://github.com/hammerfunctor/tm-mathematica.git|\
+https://github.com/hammerfunctor/tm-mathematica.git>"]
+          ]
 
 (* Format the output *)
-(* glyphs inside svg exported from Graphics are undefined in texmacs. maybe bug of qt *)
 
-TmFormat[Null]             = Null
-TmFormat[$Failed]          = $Failed
-TmFormat[g_Graphics]       := fmtImage["ps", "EPS", g]
-TmFormat[g_Graphics3D]     := fmtImage["svg", "SVG", g]
-TmFormat[g_Legended]       := fmtImage["ps", "EPS", g]
-TmFormat[t_]               := TmObj["latex:", {"$",ToString[texFmtFunction[t]],"$"}]
+(* glyphs inside svg exported from Graphics are undefined in texmacs. maybe bug of qt *)
+(* Align this snippet in emacs: align-regexp [: ]= *)
+TmFormat[Null]          = Null
+TmFormat[$Failed]       = $Failed
+TmFormat[g_Graphics]   := fmtImage["ps", "EPS", g]
+TmFormat[g_Graphics3D] := fmtImage["svg", "SVG", g]
+TmFormat[g_Legended]   := fmtImage["ps", "EPS", g]
+TmFormat[t_]           := TmObj["latex:", {"$",ToString[texFmtFunction[t]],"$"}]
 
 fmtImage[ext_String, imgFmt_String, g_] := Module[{sdata,shexdata,tree},
   sdata = ExportString[g,imgFmt];

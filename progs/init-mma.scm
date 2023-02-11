@@ -14,8 +14,47 @@
 (use-modules
  (dynamic session-edit)
  (dynamic program-edit)
- (mma-math-converter)
+ (mw-converter)
  )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Mma source files
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(texmacs-modes
+ (in-mma% (== (get-env "prog-language") "mma"))
+ (in-prog-mma% #t in-prog% in-mma%))
+
+
+(define-format mma
+  (:name "MMA Source Code")
+  (:suffix "wls"))
+
+(define (texmacs->mma x . opts)
+  (texmacs->verbatim x (acons "texmacs->verbatim:encoding" "SourceCode" '())))
+
+(define (mma->texmacs x . opts)
+  (verbatim->texmacs x (acons "verbatim->texmacs:encoding" "SourceCode" '())))
+
+(define (mma-snippet->texmacs x . opts)
+  (verbatim-snippet->texmacs x (acons "verbatim->texmacs:encoding" "SourceCode" '())))
+
+(converter texmacs-tree mma-document
+  (:function texmacs->mma))
+
+(converter mma-document texmacs-tree
+  (:function mma->texmacs))
+
+(converter texmacs-tree mma-snippet
+  (:function texmacs->mma))
+
+(converter mma-snippet texmacs-tree
+  (:function mma-snippet->texmacs))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Plugin Configuration
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; (use-modules (mma-math-converter))
 ;; (define (mma-pre-serialize lan t)
@@ -85,17 +124,11 @@
   (:session "mma")
   (:script "mma"))
 
-(texmacs-modes
- (in-mma% (== (get-env "prog-language") "mma"))
- (in-prog-mma% #t in-prog% in-mma%))
-
-;; to complete
-(lazy-keyboard (mma-edit) in-prog-mma?)
-
 (when (supports-mma?)
-  ;; (import-from (mma-menus))
+  ;;(import-from (mma-menus))
+  (import-from (mma-lang))
   (lazy-input-converter (mma-input) mma)
-  (lazy-keyboard (mma-kbd) in-mma?)
+  (lazy-keyboard (mma-edit) in-prog-mma?)
   ;; (plugin-approx-command-set! "mma" "") ; ?
   )
 
