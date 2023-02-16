@@ -6,7 +6,8 @@ Prelude::usage            = "Prelude message";
 TmRepl::usage             = "Receive something as prompt, then read-eval-print";
 TmFormat::usage           = "Format an expression to an output string";
 TmOut::usage              = "Write arguments to stdout";
-
+TmMsg::error              = "`1`";
+TmMsg::input              = "`1`";
 
 Begin["`Private`"]
 
@@ -27,12 +28,15 @@ stdout = OutputStream["stdout",1];
 stderr = OutputStream["stderr",2];
 System`$Messages = { stderr };
 
+
 (* Utility functions*)
 
 tmEscape[data_String] := StringReplace[data, {
   dataEscape -> dataEscape <> dataEscape,
   dataBegin -> dataEscape <> dataBegin,
   dataEnd -> dataEscape <> dataEnd}];
+latexEscape[data_String] := StringReplace[data, {
+  "%" -> "\\%"}]
 
 TmOut[Null] = Null;
 TmOut[data_] := WriteString[stdout, data];
@@ -44,9 +48,14 @@ TmOut[TmObj[header1_String, header2_String, List[data__String]]] :=
   WriteString[stdout, dataBegin, header1, dataBegin, header2, data, dataEnd, dataEnd]
 TmOut[objs__TmObj] := Map[TmOut, List[objs]]
 
-tmErr[data_] := WriteString[stderr, ToString[data]]
+
+tmErr[data_] := Message[TmMsg::error, data]
 tmErr[TmObj[header_String, data_String]] :=
-  WriteString[stderr, dataBegin, header, data, dataEnd]
+  Message[TmMsg::error, dataBegin<>header<>data<>dataEnd]
+tmErr1[data_] :=
+  WriteString[stdout, dataBegin, "latex:\\red ", tmEscape[latexEscape[ToString[data]]], dataEnd]
+tmErr1[TmObj[header_String, data_String]] :=
+  WriteString[stdout, dataBegin, "latex:\\red ", dataBegin,header,latexEscape[data],dataEnd, dataEnd]
 
 
 tmBegin[] := WriteString[stdout, dataBegin, verbatim]
@@ -116,9 +125,17 @@ readTillInPkt[link_LinkObject] := Module[{out = {}, next},
 ]
 handlePkt[TextPacket[cont_]] := TmObj["verbatim:",cont]
 
+tmDebug[input_] := If[MemberQ[$ScriptCommandLine, "MMA_DEBUG"], tmErr1[input]];
+
 (* REPL loop *)
-TmRepl[] := Module[{magicLineResult,widthTemp,next,inbuf={},inStream},
-  magicLineResult = magicLine[InputString[""]];
+TmRepl[] := Module[
+  {magicLineResult,widthTemp,next,inbuf={},inStream},
+  input = InputString[""];
+  (* WriteString[stdout, dataBegin, "latex:\\red ", latexEscape[tmEscape[input]], dataEnd]; *)
+
+  tmDebug[input];
+
+  magicLineResult = magicLine[input];
   Switch[magicLineResult,
     _String,
       AppendTo[inbuf,magicLineResult];
@@ -140,7 +157,7 @@ TmRepl[] := Module[{magicLineResult,widthTemp,next,inbuf={},inStream},
       TmOut[TmFormat[next]];
       If[!emptyQ[next], WriteString[stdout,"\n"]]]];
   tmEnd[];
-  ]
+            ]
 
 End[]
 
@@ -150,7 +167,6 @@ EndPackage[]
 
 
 TmOut[Prelude]
-
 (* Main Loop *)
 Module[{i=1},
   While[True,
