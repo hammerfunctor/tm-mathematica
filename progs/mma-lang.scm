@@ -38,6 +38,7 @@
 (define (mma-number-suffix)
   `(suffix
     (imaginary "I")))
+
 (tm-define (parser-feature lan key)
   (:require (and (== lan "mma") (== key "number")))
   `(,(string->symbol key)
@@ -65,21 +66,22 @@
 
 (define (notify-mma-syntax var val)
   (syntax-read-preferences "mma"))
+
 (define-preferences
-  ;;("syntax:mma:none" "red" notify-mma-syntax)
-  ;;("syntax:mma:comment" "brown" notify-mma-syntax)
+  ("syntax:mma:none" "red" notify-mma-syntax)
+  ("syntax:mma:comment" "brown" notify-mma-syntax)
   ("syntax:mma:error" "dark red" notify-mma-syntax)
   ("syntax:mma:constant" "#4040c0" notify-mma-syntax)
-  ;;("syntax:mma:constant_number" "#4040c0" notify-mma-syntax)
+  ("syntax:mma:constant_number" "#4040c0" notify-mma-syntax)
   ("syntax:mma:constant_string" "dark grey" notify-mma-syntax)
-  ;;("syntax:mma:constant_char" "#333333" notify-mma-syntax)
-  ;;("syntax:mma:declare_function" "#0000c0" notify-mma-syntax)
-  ;;("syntax:mma:declare_type" "#0000c0" notify-mma-syntax)
+  ("syntax:mma:constant_char" "#333333" notify-mma-syntax)
+  ("syntax:mma:declare_function" "#0000c0" notify-mma-syntax)
+  ("syntax:mma:declare_type" "#0000c0" notify-mma-syntax)
   ("syntax:mma:operator" "#8b008b" notify-mma-syntax)
   ("syntax:mma:operator_openclose" "#B02020" notify-mma-syntax)
   ("syntax:mma:operator_decoration" "#88888" notify-mma-syntax)
   ("syntax:mma:operator_special" "orange" notify-mma-syntax)
   ("syntax:mma:keyword" "#309090" notify-mma-syntax)
-  ;;("syntax:mma:keyword_conditional" "#309090" notify-mma-syntax)
-  ;;("syntax:mma:keyword_control" "#309090" notify-mma-syntax)
+  ("syntax:mma:keyword_conditional" "#309090" notify-mma-syntax)
+  ("syntax:mma:keyword_control" "#309090" notify-mma-syntax)
   )

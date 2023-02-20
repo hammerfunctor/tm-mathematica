@@ -8,8 +8,11 @@
 **  UPDATE
 
 *** 2023/02/10
-    Introduce some syntax highlight Elements. Though it only works at
-    the time the session is created.
+    Introduced some syntax highlight Elements. If you want to enable
+    it, add to you init file =my-init-texmacs.scm=:
+    #+begin_src scheme
+      (lazy-format (mma-format) mma)
+    #+end_src
 
     Formula input is still buggy as of now. I'm too busy to get some
     time fixing it. If you have trouble with that, just don't use it.

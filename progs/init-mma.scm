@@ -14,43 +14,13 @@
 (use-modules
  (dynamic session-edit)
  (dynamic program-edit)
- (mw-converter)
- )
+ (mw-converter))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Mma source files
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 (texmacs-modes
  (in-mma% (== (get-env "prog-language") "mma"))
  (in-prog-mma% #t in-prog% in-mma%))
-
-
-(define-format mma
-  (:name "MMA Source Code")
-  (:suffix "wls"))
-
-(define (texmacs->mma x . opts)
-  (texmacs->verbatim x (acons "texmacs->verbatim:encoding" "SourceCode" '())))
-
-(define (mma->texmacs x . opts)
-  (verbatim->texmacs x (acons "verbatim->texmacs:encoding" "SourceCode" '())))
-
-(define (mma-snippet->texmacs x . opts)
-  (verbatim-snippet->texmacs x (acons "verbatim->texmacs:encoding" "SourceCode" '())))
-
-(converter texmacs-tree mma-document
-  (:function texmacs->mma))
-
-(converter mma-document texmacs-tree
-  (:function mma->texmacs))
-
-(converter texmacs-tree mma-snippet
-  (:function texmacs->mma))
-
-(converter mma-snippet texmacs-tree
-  (:function mma-snippet->texmacs))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Plugin Configuration
@@ -89,7 +59,6 @@
          u)))
 
 
-
 (define (mma-serialize lan t)
   (with u (mma-pre-serialize lan t)
     ;; (display u)
@@ -110,23 +79,20 @@
           (string-append "wolframscript -f " boot args)
           (string-append "wolfram -script " boot args)))))
 
-(define wolfram-exists
-  (or (url-exists-in-path? "wolframscript")
-      (url-exists-in-path? "wolfram")))
-
 (plugin-configure mma
   (:winpath "wolframscript" ".")
-  (:require ,wolfram-exists)
+  (:require (or (url-exists-in-path? "wolframscript")
+                (url-exists-in-path? "wolfram")))
   (:serializer ,mma-serialize)
   (:launch ,(mma-launcher))
   (:tab-completion #t)
   (:session "mma")
   (:script "mma"))
 
-(when wolfram-exists
-  (import-from (mma-lang)))
 
 (when (supports-mma?)
+  (import-from (mma-lang))
+  (lazy-format (mma-format) mma)
   (lazy-input-converter (mma-input) mma)
   (lazy-keyboard (mma-edit) in-prog-mma?)
   ;; (plugin-approx-command-set! "mma" "") ; ?
