@@ -28,8 +28,7 @@
 
 (define (mma-pre-serialize-rec lan serialized this rest)
   ;;(display "mma-pre-serialize-rec: ")
-  (display this)
-  (display "\n")
+  (display* this "\n")
   (let* ((this-serialized
           (cond ((func? this 'math) (mw-map-math lan '() this))
                 ((func? this 'document)
@@ -42,26 +41,23 @@
 
 (define (mma-pre-serialize lan u)
   (cond ((func? u 'math 1)
-         (display "mma-pre-serialize: 1\n")
-         (display u)
+         ;;(display* "mma-pre-serialize: 1\n" u "\n")
          (mw-map-math lan '() u))
         ((func? u 'document 1)
-         (display "mma-pre-serialize: 2\n")
-         (display u)
+         ;;(display* "mma-pre-serialize: 2\n" u "\n")
          (mma-pre-serialize lan (cadr u)))
         ((func? u 'document)
-         (display "mma-pre-serialize: 3\n")
-         (display u)
+         ;;(display* "mma-pre-serialize: 3\n" u "\n")
          (mma-pre-serialize-rec lan '(document) (cadr u) (cddr u)))
         (else
-         (display "mma-pre-serialize: 4\nThis is not captured: ")
-         (display u)
+         ;;(display* "mma-pre-serialize: 4\nThis is not captured: " u "\n")
          u)))
 
+;;(display (mma-pre-serialize "mma" '(document "Exp[x]]")))
 
 (define (mma-serialize lan t)
   (with u (mma-pre-serialize lan t)
-    ;; (display u)
+    ;;(display u)
     (with s (texmacs->code (stree->tree u) "SourceCode")
       ;; (display s)
       (string-append s "\nEndOfFile\n"))))
@@ -91,9 +87,9 @@
 
 
 (when (supports-mma?)
+  (lazy-input-converter (mma-input) mma)
   (import-from (mma-lang))
   (lazy-format (mma-format) mma)
-  (lazy-input-converter (mma-input) mma)
   (lazy-keyboard (mma-edit) in-prog-mma?)
   ;; (plugin-approx-command-set! "mma" "") ; ?
   )

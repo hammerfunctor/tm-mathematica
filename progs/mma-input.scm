@@ -18,6 +18,9 @@
 (texmacs-module (mma-input)
   (:use (convert rewrite tmtm-brackets)))
 
+;; dirty hack
+(tm-define (plugin-preprocess name ses t opts) t)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; conversion of strings
