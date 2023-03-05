@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+echo_help() {
+  echo "Usage: "
+}
+
+texmacs -x "
+(begin
+  (load \"session-extraction.scm\")
+  (load-buffer \"$1\")
+  (save-lan-to-file \"julia\" \"$2\")
+  (quit-TeXmacs))"

@@ -7,6 +7,9 @@
 
 **  UPDATE
 
+*** 2023/03/05
+    Add a more consistent code dumping script =bin/tmdumpcode1= using
+    TeXmacs scheme. Look into and use it at your own risk.
 *** 2023/02/10
     Introduced some syntax highlight Elements. If you want to enable
     it, add to you init file =my-init-texmacs.scm=:

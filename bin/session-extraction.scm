@@ -1,0 +1,25 @@
+(define (subsession-document-context-lan? lan)
+  (lambda (t)
+    (or (and (tree-is? t 'document)
+	     (tree-is? (tree-ref t :up) 'session)
+	     (== (tree-ref t :up 0) (tree lan)))
+        (and (tree-is? t 'document)
+	     (tree-is? (tree-ref t :up) 'unfolded-subsession)
+             (== (tree-ref t :up 0) (tree lan))
+	     (== (tree-index t) 1)))))
+
+(define (map-session-code-string f lan)
+  (let ((io-handler (lambda (io)
+                      (f (texmacs->code (tree-ref io 1) "SourceCode"))
+                      (f "\n\n")))
+        (is-io? (lambda (t) (tm-in? t '(input unfolded-io folded-io)))))
+    (for-each
+        (lambda (ses)
+          (for-each io-handler (tree-search ses is-io?)))
+      (tree-search (buffer-tree) (subsession-document-context-lan? lan)))))
+
+;; Shell io is currently buggy, save to a file
+(define (save-lan-to-file lan file)
+  (let ((port (open-output-file file)))
+    (map-session-code-string (lambda (t) (display t port)) lan)
+    (close-port port)))
