@@ -36,7 +36,7 @@
 ;; Auto indent
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define wolfram-indenters
-  '("=" "==" ":=" "->" ":>"))
+  '("=" "==" ":=" "->" ":>" "@" "&@" "@@" "&@@" "/@" "&/@" "<>" "+" "-" "/" "/." "<" ">" "<=" ">=" "&&" "||"))
 
 (define (standard-indent? s)
   (with indent?
@@ -61,17 +61,25 @@
 	 (s (program-row prev))
 	 (i (string-get-indent s))
 	 (last (- (string-length s) 1))
-	 (curly  (my-string-bracket-find s last -1 #\{ #\} 0))
-	 (round  (my-string-bracket-find s last -1 #\( #\) 0))
-	 (square  (my-string-bracket-find s last -1 #\[ #\] 0)))
-    (cond ((== row 0) i)
-          ((or curly round square) (+ (* square 2) curly round i)) ; three brackets contribute different numbers of spaces
-	  ((standard-indent? s) (+ i 2))
-	  (else
-	   (display* "row= " prev "\n")
-	   (display* "ref= " (reference-row prev) "\n")
-	   (with ref (reference-row prev)
-	     (string-get-indent (program-row ref)))))))
+	 (curly (my-string-bracket-find s last -1 #\{ #\} 0))
+	 (round (my-string-bracket-find s last -1 #\( #\) 0))
+	 (square (my-string-bracket-find s last -1 #\[ #\] 0)))
+    (if (== row 0) 0
+        (list-fold (lambda (el knil)
+                     (+ knil (if (car el) (cadr el) 0)))
+                   i
+                   (list `(,(or curly round square) ,(+ (* square 2) curly round)) ; three brackets contribute different numbers of spaces
+                         `(,(standard-indent? s) 2))))
+
+    ;; (cond ((== row 0) i)
+    ;;       ((or curly round square) (+ (* square 2) curly round i)) ; three brackets contribute different numbers of spaces
+    ;;       ((standard-indent? s) (+ i 2))
+    ;;       (else
+    ;;        (display* "row= " prev "\n")
+    ;;        (display* "ref= " (reference-row prev) "\n")
+    ;;        (with ref (reference-row prev)
+    ;;          (string-get-indent (program-row ref)))))
+    ))
 
 (define (compute-indentation row)
   (let* ((s (program-row row))

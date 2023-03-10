@@ -80,13 +80,17 @@ https://github.com/hammerfunctor/tm-mathematica.git>"]
 (* Align this snippet in emacs: align-regexp [: ]= *)
 TmFormat[Null]          = Null
 TmFormat[$Failed]       = $Failed
-TmFormat[g_Graphics]   := fmtImage["ps", "EPS", g]
-TmFormat[g_Graphics3D] := fmtImage["svg", "SVG", g]
-TmFormat[g_Legended]   := fmtImage["ps", "EPS", g]
+TmFormat[g_Graphics]   := fmtImage["EPS", g]
+TmFormat[g_Graphics3D] := fmtImage["SVG", g]
+TmFormat[g_Legended]   := fmtImage["EPS", g]
 TmFormat[t_]           := TmObj["latex:", {"$",ToString[texFmtFunction[t]],"$"}]
 
-fmtImage[ext_String, imgFmt_String, g_] := Module[{sdata,shexdata,tree},
+fmtImage[imgFmt_String, g_] := Module[{sdata,shexdata,tree},
   sdata = ExportString[g,imgFmt];
+  ext = Switch[imgFmt,
+    "EPS", "eps",
+    "SVG", "svg",
+    "PDF", "pdf"];
   shexdata = StringJoin[IntegerString[#, 16, 2] & /@ ToCharacterCode[sdata]]; (* pad it to length 2 !!! *)
   (* construct the tree *)
   tree = StringJoin["<image|<tuple|<#",shexdata,">|", CreateUUID["mma-output-"]<>"."<>ext ,">|",width,"|||>"];
