@@ -19,18 +19,20 @@
 ;; hacking standard string-bracket-find*
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define (my-string-bracket-find s pos inc br ibr level)
+(define (my-string-bracket-calc s pos inc br ibr level)
   ;;(display* "find: pos= " pos ", level= " level "\n")
-  (cond ((or (< pos 0) (>= pos (string-length s))) level)
-        ((and (== level 1) (== (string-ref s pos) br))
-         ;;(display* "returning at " pos "\n")
-         pos)
+  (cond ((or (< pos 0) (>= pos (string-length s)))
+         ;;(display* "return level=" level "\n")
+         level)
         ((== (string-ref s pos) br)
-         ;;(display* "found at " pos "\n")
-         (my-string-bracket-find s (+ pos inc) inc br ibr (+ level 1)))
+         ;;(display* "found " br " at " pos "\n")
+         (my-string-bracket-calc s (+ pos inc) inc br ibr (+ level 1)))
+
         ((== (string-ref s pos) ibr)
-         (my-string-bracket-find s (+ pos inc) inc br ibr (- level 1)))
-        (else (my-string-bracket-find s (+ pos inc) inc br ibr level))))
+         ;;(display* "found " ibr " at " pos "\n")
+         (my-string-bracket-calc s (+ pos inc) inc br ibr (- level 1)))
+
+        (else (my-string-bracket-calc s (+ pos inc) inc br ibr level))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Auto indent
@@ -53,24 +55,25 @@
 (define (reference-row-bis row)
   (with s (program-row (- row 1))
     (cond ((not s) row)
-	  ((standard-indent? s) (reference-row-bis (- row 1)))
-	  (else row))))
+          ((standard-indent? s) (reference-row-bis (- row 1)))
+          (else row))))
 
 (define (reference-row row)
   (let* ((r1 (program-previous-match row #\{ #\}))
-	 (r2 (program-previous-match row #\( #\)))
-	 (r3 (program-previous-match row #\[ #\]))
-	 (rr (min r1 r2 r3)))
+         (r2 (program-previous-match row #\( #\)))
+         (r3 (program-previous-match row #\[ #\]))
+         (rr (min r1 r2 r3)))
     (reference-row-bis rr)))
 
 (define (compute-indentation-bis row)
   (let* ((prev (max 0 (- row 1)))
-	 (s (program-row prev))
-	 (i (string-get-indent s))
-	 (last (- (string-length s) 1))
-	 (curly (my-string-bracket-find s last -1 #\{ #\} 0))
-	 (round (my-string-bracket-find s last -1 #\( #\) 0))
-	 (square (my-string-bracket-find s last -1 #\[ #\] 0)))
+         (s (program-row prev))
+         (i (string-get-indent s))
+         (last (- (string-length s) 1))
+         (curly (my-string-bracket-calc s last -1 #\{ #\} 0))
+         (round (my-string-bracket-calc s last -1 #\( #\) 0))
+         (square (my-string-bracket-calc s last -1 #\[ #\] 0)))
+    ;;(display* "indent=" i ", curly=" curly ", round=" round ", square=" square "\n")
     (if (== row 0) 0
         (list-fold (lambda (el knil)
                      (+ knil (if (car el) (cadr el) 0)))
@@ -90,10 +93,10 @@
 
 (define (compute-indentation row)
   (let* ((s (program-row row))
-	 (i (string-get-indent s)))
+         (i (string-get-indent s)))
     (if (and (< i (string-length s)) (== (string-ref s i) #\}))
-	(max 0 (- (compute-indentation-bis row) 2))
-	(compute-indentation-bis row))))
+        (max 0 (- (compute-indentation-bis row) 2))
+        (compute-indentation-bis row))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; User interface for auto indent
@@ -102,5 +105,6 @@
   (:synopsis "indent current line of a wolfram program")
   (and-with doc (program-tree)
     (with i (compute-indentation (program-row-number))
+      ;;(display* i "\n")
       (program-set-indent i)
       (program-go-to (program-row-number) i))))
