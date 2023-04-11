@@ -70,10 +70,11 @@
 
 (define (mma-launcher)
   (with boot (raw-quote (mma-entry))
-    (with args (if (== (getenv "MMA_DEBUG") "1") " MMA_DEBUG" "")
-      (if (url-exists-in-path? "wolframscript")
-          (string-append "wolframscript -f " boot args)
-          (string-append "wolfram -script " boot args)))))
+    (with starttm " TEXMACS "
+      (with args (if (== (getenv "MMA_DEBUG") "1") " MMA_DEBUG" "")
+        (if (url-exists-in-path? "wolframscript")
+            (string-append "wolframscript -f " boot starttm args)
+            (string-append "wolfram -script " boot starttm args))))))
 
 (plugin-configure mma
   (:winpath "wolframscript" ".")

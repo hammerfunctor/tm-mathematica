@@ -5,7 +5,8 @@ InputPrompt::usage        = "Generate a list of objects to print as input prompt
 Prelude::usage            = "Prelude message";
 TmRepl::usage             = "Receive something as prompt, then read-eval-print";
 TmFormat::usage           = "Format an expression to an output string";
-TmOut::usage              = "Write arguments to stdout";
+TmOut1::usage              = "Write arguments to stdout";
+InCmdArgs::usage          = "Test if the argument is in command line arguments"
 TmMsg::error              = "`1`";
 TmMsg::input              = "`1`";
 
@@ -48,6 +49,20 @@ TmOut[TmObj[header1_String, header2_String, List[data__String]]] :=
   WriteString[stdout, dataBegin, header1, dataBegin, header2, data, dataEnd, dataEnd]
 TmOut[objs__TmObj] := Map[TmOut, List[objs]]
 
+(* Possibly eacspe? *)
+tmprep[obj_TmObj] := obj //. TmObj[h_, rest__] :> {dataBegin, h, rest, dataEnd};
+
+(* Every single expression return one single well defined object, and that
+ cannot be a TmObj. So we can regard all __TmObj and List[__TmObj] as human
+ made output. For an Expression from user input to be re-formatted, it has
+ to be a single _TmObj or List[__TmObj]]. *)
+TmOut1[Null] = Null;
+TmOut1[obj_] := WriteString[stdout, data]
+TmOut1[obj_TmObj] := WriteString[stdout, Sequence@@Flatten[tmprep[obj]]]
+TmOut1[objs__TmObj] := Map[TmOut1, {objs}]
+TmOut1[List[objs__TmObj]] := Map[TmOut1, {objs}]
+
+
 
 tmErr[data_] := Message[TmMsg::error, data]
 tmErr[TmObj[header_String, data_String]] :=
@@ -62,17 +77,19 @@ tmBegin[] := WriteString[stdout, dataBegin, verbatim]
 tmEnd[] := WriteString[stdout, dataEnd]
 
 
-InputPrompt[i_] := TmObj["latex:", "prompt#",
-                         {"\\pink In[", ToString[i], "]:= {}"}]
+InputPrompt[i_] := TmObj["latex:",
+                         TmObj["prompt# ","\\pink In[", ToString[i], "]:= {}"]
+                   ]
 
-Prelude = Sequence[
-  TmObj["verbatim:", "Use Wolfram language in GNU TeXmacs
+Prelude = {
+  TmObj["verbatim:", "Wolfram-lang plugin for GNU ",
+        TmObj["texmacs:", "<text|<TeXmacs>>"],"
 Created by Hammer Hu, implemented in Wolfram, named mma by default
 Star and fork it at "],
   TmObj["texmacs:", "<hlink|\
 https://github.com/hammerfunctor/tm-mathematica.git|\
 https://github.com/hammerfunctor/tm-mathematica.git>"]
-          ]
+}
 
 (* Format the output *)
 
@@ -80,10 +97,13 @@ https://github.com/hammerfunctor/tm-mathematica.git>"]
 (* Align this snippet in emacs: align-regexp [: ]= *)
 TmFormat[Null]          = Null
 TmFormat[$Failed]       = $Failed
-TmFormat[g_Graphics]   := fmtImage["EPS", g]
-TmFormat[g_Graphics3D] := fmtImage["SVG", g]
-TmFormat[g_Legended]   := fmtImage["EPS", g]
-TmFormat[t_]           := TmObj["latex:", {"$",ToString[texFmtFunction[t]],"$"}]
+(*TmFormat[g_Graphics]   := fmtImage["EPS", g]*)
+(*TmFormat[g_Graphics3D] := fmtImage["SVG", g]*)
+(*TmFormat[g_Legended]   := fmtImage["EPS", g]*)
+TmFormat[g_Graphics]   := fmtImage["PDF", g]
+TmFormat[g_Graphics3D] := fmtImage["PDF", g]
+TmFormat[g_Legended]   := fmtImage["PDF", g]
+TmFormat[t_]           := TmObj["latex:", "$",ToString[texFmtFunction[t]],"$"]
 
 fmtImage[imgFmt_String, g_] := Module[{sdata,shexdata,tree},
   sdata = ExportString[g,imgFmt];
@@ -129,7 +149,8 @@ readTillInPkt[link_LinkObject] := Module[{out = {}, next},
 ]
 handlePkt[TextPacket[cont_]] := TmObj["verbatim:",cont]
 
-tmDebug[input_] := If[MemberQ[$ScriptCommandLine, "MMA_DEBUG"], tmErr1[input]];
+InCmdArgs[arg_] := Or[MemberQ[$ScriptCommandLine,arg],MemberQ[$CommandLine,arg]]
+tmDebug[input_] := If[InCmdArgs["MMA_DEBUG"], tmErr1[input]];
 
 (* REPL loop *)
 TmRepl[] := Module[
@@ -158,24 +179,28 @@ TmRepl[] := Module[
   tmBegin[];
   Block[{width=widthTemp},
     While[!SameQ[next=Read[inStream],EndOfFile],
-      TmOut[TmFormat[next]];
+      TmOut1[TmFormat[next]];
       If[!emptyQ[next], WriteString[stdout,"\n"]]]];
   tmEnd[];
             ]
 
 End[]
 
-Protect[InputPrompt,Prelude,TmRepl,TmFormat,TmOut]
+Protect[InputPrompt,Prelude,TmRepl,TmFormat,TmOut1,InCmdArgs]
 EndPackage[]
 
+If[InCmdArgs["TEXMACS"],
+   TmOut1[Prelude];
+   Module[{i=1},
+          While[
+            True,
+            TmOut1[InputPrompt[i]]; (* Print the prompt *)
+            TmRepl[];              (* Read input, evaluate and print the output *)
+            i++;
+          ]
+   ],
 
-
-TmOut[Prelude]
-(* Main Loop *)
-Module[{i=1},
-  While[True,
-    TmOut[InputPrompt[i]]; (* Print the prompt *)
-    TmRepl[];              (* Read input, evaluate and print the output *)
-    i++;
-  ]
+   While[True,
+         ToExpression[Input["Enter:"]]
+   ]
 ]
