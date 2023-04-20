@@ -85,7 +85,7 @@ Prelude = {
   TmObj["verbatim:", "Wolfram-lang plugin for GNU ",
         TmObj["texmacs:", "<text|<TeXmacs>>"],"
 Created by Hammer Hu, implemented in Wolfram, named mma by default
-Star and fork it at "],
+For more info, see "],
   TmObj["texmacs:", "<hlink|\
 https://github.com/hammerfunctor/tm-mathematica.git|\
 https://github.com/hammerfunctor/tm-mathematica.git>"]
