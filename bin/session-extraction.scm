@@ -18,8 +18,23 @@
           (for-each io-handler (tree-search ses is-io?)))
       (tree-search (buffer-tree) (subsession-document-context-lan? lan)))))
 
+(define (guess-saved-buffer suffix)
+  (let* ((name (propose-name-buffer))
+         (name1 (if (string-ends? name ".tm") name
+                    (string-append name (basename (url->string (url-temp))) ".tm")))
+         (suffix1 (if (string-starts? suffix ".") suffix
+                      (string-append "." suffix))))
+    (string-append (string-drop-right name1 3) suffix1)))
+
 ;; Shell io is currently buggy, save to a file
-(define (save-lan-to-file lan file)
-  (let ((port (open-output-file file)))
-    (map-session-code-string (lambda (t) (display t port)) lan)
+(tm-define (save-lan-to-file lan file suffix)
+  (:argument lan "Language to save")
+  (:argument file "Save to")
+  (:argument suffix "Filename ext (default to lan)")
+  (let* ((lan1 (if (string? lan) lan ""))
+         (suffix1 (if (string? suffix) suffix lan1))
+         (file1 (if (and (string? file) (not (string-null? file)))
+                    file (guess-saved-buffer suffix1)))
+         (port (open-output-file file1)))
+    (map-session-code-string (lambda (t) (display t port)) lan1)
     (close-port port)))

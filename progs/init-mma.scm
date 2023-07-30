@@ -13,10 +13,7 @@
 
 (use-modules
  (dynamic session-edit)
- (dynamic program-edit)
- (mw-converter))
-
-
+ (dynamic program-edit))
 
 (texmacs-modes
  (in-mma% (== (get-env "prog-language") "mma"))
@@ -26,34 +23,40 @@
 ;; Plugin Configuration
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define (mma-pre-serialize-rec lan serialized this rest)
-  ;;(display "mma-pre-serialize-rec: ")
-  (display* this "\n")
-  (let* ((this-serialized
-          (cond ((func? this 'math) (mw-map-math lan '() this))
-                ((func? this 'document)
-                 (mma-pre-serialize-rec lan '(document) (cadr this) (cddr this)))
-                (else this)))
-         (serialized-new (append serialized (list this-serialized))))
-    (if (null? rest)
-        serialized-new
-        (mma-pre-serialize-rec lan serialized-new (car rest) (cdr rest)))))
-
-(define (mma-pre-serialize lan u)
-  (cond ((func? u 'math 1)
-         ;;(display* "mma-pre-serialize: 1\n" u "\n")
-         (mw-map-math lan '() u))
-        ((func? u 'document 1)
-         ;;(display* "mma-pre-serialize: 2\n" u "\n")
-         (mma-pre-serialize lan (cadr u)))
-        ((func? u 'document)
-         ;;(display* "mma-pre-serialize: 3\n" u "\n")
-         (mma-pre-serialize-rec lan '(document) (cadr u) (cddr u)))
-        (else
-         ;;(display* "mma-pre-serialize: 4\nThis is not captured: " u "\n")
-         u)))
+(cond-expand
+ ;; regexp not working so far
+ (s7 (define (mma-pre-serialize . args) (apply pre-serialize args)))
+ (else
+  (use-modules (mw-converter))
+  (define (mma-pre-serialize-rec lan serialized this rest)
+    ;;(display "mma-pre-serialize-rec: ")
+    (display* this "\n")
+    (let* ((this-serialized
+            (cond ((func? this 'math) (mw-map-math lan '() this))
+                  ((func? this 'document)
+                   (mma-pre-serialize-rec lan '(document) (cadr this) (cddr this)))
+                  (else this)))
+           (serialized-new (append serialized (list this-serialized))))
+      (if (null? rest)
+          serialized-new
+          (mma-pre-serialize-rec lan serialized-new (car rest) (cdr rest)))))
+  (define (mma-pre-serialize lan u)
+    (cond ((func? u 'math 1)
+           ;;(display* "mma-pre-serialize: 1\n" u "\n")
+           (mw-map-math lan '() u))
+          ((func? u 'document 1)
+           ;;(display* "mma-pre-serialize: 2\n" u "\n")
+           (mma-pre-serialize lan (cadr u)))
+          ((func? u 'document)
+           ;;(display* "mma-pre-serialize: 3\n" u "\n")
+           (mma-pre-serialize-rec lan '(document) (cadr u) (cddr u)))
+          (else
+           ;;(display* "mma-pre-serialize: 4\nThis is not captured: " u "\n")
+           u)))))
 
 ;;(display (mma-pre-serialize "mma" '(document "Exp[x]]")))
+
+(define (mma-pre-serialize . args) (apply pre-serialize args))
 
 (define (mma-serialize lan t)
   (with u (mma-pre-serialize lan t)

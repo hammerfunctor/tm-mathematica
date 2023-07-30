@@ -11,18 +11,25 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (texmacs-module (mw-converter)
-  (:use (ice-9 regex))
+  ;;(:use (ice-9 regex))
   )
 
+;; (cond-expand
+;;  (s7 (define (hash-set! ht key val)
+;;        (hash-table-set! ht key val))
+;;      (define (hash-ref ht key)
+;;        (hash-table-ref ht key)))
+;;  (else #t))
+
 (define mw-symbol-map-table (make-hash-table 30))
-(hashq-set! mw-symbol-map-table 'sin (make-regexp "sin\\s*\\("))
-(hashq-set! mw-symbol-map-table 'cos (make-regexp "cos\\s*\\("))
-(hashq-set! mw-symbol-map-table 'tan (make-regexp "tan\\s*\\("))
-(hashq-set! mw-symbol-map-table 'cot (make-regexp "cot\\s*\\("))
-(hashq-set! mw-symbol-map-table 'sec (make-regexp "sec\\s*\\("))
-(hashq-set! mw-symbol-map-table 'csc (make-regexp "csc\\s*\\("))
-(hashq-set! mw-symbol-map-table 'exp (make-regexp "exp\\s*\\("))
-(hashq-set! mw-symbol-map-table 'log (make-regexp "log\\s*\\("))
+(hash-set! mw-symbol-map-table 'sin (make-regexp "sin\\s*\\("))
+(hash-set! mw-symbol-map-table 'cos (make-regexp "cos\\s*\\("))
+(hash-set! mw-symbol-map-table 'tan (make-regexp "tan\\s*\\("))
+(hash-set! mw-symbol-map-table 'cot (make-regexp "cot\\s*\\("))
+(hash-set! mw-symbol-map-table 'sec (make-regexp "sec\\s*\\("))
+(hash-set! mw-symbol-map-table 'csc (make-regexp "csc\\s*\\("))
+(hash-set! mw-symbol-map-table 'exp (make-regexp "exp\\s*\\("))
+(hash-set! mw-symbol-map-table 'log (make-regexp "log\\s*\\("))
 
 
 (define (find-balanced-br s idx br ibr level)
@@ -37,7 +44,7 @@
 ;; (string-replace "sin(x)/x" "Sin[" 0 4)
 (define (mw-map-single-param-func key funcname)
   (lambda (s)
-    (let ((matched (regexp-exec (hashq-ref mw-symbol-map-table key) s)))
+    (let ((matched (regexp-exec (hash-ref mw-symbol-map-table key) s)))
       (if matched
           (let* ((start (match:start matched))
                  (end (match:end matched))
@@ -99,5 +106,3 @@
                     (mw-map-math lan (append wrapped (list mapped-string)) (cdr rest))))
                  (else (mw-map-math lan (append wrapped (list firstel)) (cdr rest))))))
         (else rest)))
-
-
