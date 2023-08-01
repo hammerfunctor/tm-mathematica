@@ -1,0 +1,6 @@
+
+* new math input?
+LinkWrite[kernel, 
+ Unevaluated[
+  EnterExpressionPacket[
+   ToExpression["\\frac{2}{\\sqrt{5}}", TeXForm]]]]
