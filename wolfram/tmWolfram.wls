@@ -9,6 +9,8 @@ TmOut1::usage             = "Write arguments to stdout";
 InCmdArgs::usage          = "Test if the argument is in command line arguments";
 TmMsg::error              = "`1`";
 TmMsg::input              = "`1`";
+(* Export this symbol to remove prefix TeXmacsWolfram`Private` *)
+TmHoldExpr::usage         = "With attr HoldAllComplete";
 
 Begin["`Private`"]
 
@@ -29,7 +31,7 @@ tmSetting = <|
   |>
 
 tmInputConv = {
-  RegularExpression["%(\\d*)"] -> "Out[$1]"
+  (* RegularExpression["%(\\d*\)"] -> "Out[$1]" *)
 }
 
 stdout = OutputStream["stdout",1];
@@ -41,10 +43,15 @@ System`$Messages = { };
 tmLink = LinkLaunch[First[$CommandLine] <> " -wstp"]
 LinkRead[tmLink]
 
-Unprotect[Out]
-ClearAll[Out]
-Remove[Out]
-Protect[Out]
+SetAttributes[TmHoldExpr, HoldAllComplete]
+LinkWrite[tmLink, Unevaluated[EvaluatePacket[TmHoldExpr[e_] := e]]]
+LinkRead[tmLink]
+
+
+(* Unprotect[Out] *)
+(* ClearAll[Out] *)
+(* Remove[Out] *)
+(* Protect[Out] *)
 
 
 
@@ -192,7 +199,8 @@ flush[inbuf_List, next_String, exprnum_] := Module[
   buf = StringReplace[StringJoin[inbuf1], tmInputConv];
   (* tmDebug1["true", buf]; *)
   If[SyntaxQ[buf],
-     LinkWrite[tmLink, EnterExpressionPacket[ToExpression[buf]]]; {exprnum + 1, {}},
+     LinkWrite[tmLink, EnterExpressionPacket[ToExpression[buf, StandardForm, TmHoldExpr]]];
+     {exprnum + 1, {}},
      {exprnum, inbuf1}
   ]
 ]
@@ -223,6 +231,8 @@ TmRepl[] :=
 
     (* TODO: informative message *)
     If[Length[inbuf]!=0, Print["Incomplete input!"]];
+    (* input ends, now outputs *)
+    tmBegin[];
 
     (* tmDebug1["true",exprnum]; *)
     While[
@@ -239,7 +249,6 @@ TmRepl[] :=
     ];
     (* tmDebug1[debug, results]; *)
 
-    tmBegin[];
     Block[
       {tmImageWidth=widthTemp,
        onfilter=If[Length[Position[results,OutputNamePacket]]==1,
@@ -251,7 +260,7 @@ TmRepl[] :=
 
 End[]
 
-Protect[InputPrompt,Prelude,TmRepl,TmFormat,TmOut1,InCmdArgs]
+Protect[InputPrompt,Prelude,TmRepl,TmFormat,TmOut1,InCmdArgs,TmHoldExpr]
 EndPackage[]
 
 If[InCmdArgs["TEXMACS"],
