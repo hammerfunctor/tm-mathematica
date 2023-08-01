@@ -18,8 +18,10 @@
 (texmacs-module (mma-input)
   (:use (convert rewrite tmtm-brackets)))
 
+;;(display* "woshi")
+
 ;; dirty hack
-(tm-define (plugin-preprocess name ses t opts) t)
+;;(tm-define (plugin-preprocess name ses t opts) t)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

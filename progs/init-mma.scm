@@ -59,7 +59,7 @@
 (define (mma-pre-serialize . args) (apply pre-serialize args))
 
 (define (mma-serialize lan t)
-  (with u (mma-pre-serialize lan t)
+  (with u (pre-serialize lan t)
     ;;(display u)
     (with s (texmacs->code (stree->tree u) "SourceCode")
       ;; (display s)
