@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 
 echo_help() {
-  echo "Usage: "
+  echo "Usage: <source.tm> <target>
+Export mma codes in <source.tm> to <target>"
 }
 
-texmacs -x "
+if [[ $# -eq 2 ]]; then
+  texmacs -x "
 (begin
   (load \"session-extraction.scm\")
   (load-buffer \"$1\")
-  (save-lan-to-file \"julia\" \"$2\")
+  (save-lan-to-file \"mma\" \"$2\")
   (quit-TeXmacs))"
+else
+  echo_help
+fi
