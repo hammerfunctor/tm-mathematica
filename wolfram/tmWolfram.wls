@@ -1,8 +1,7 @@
 #!/bin/env wolframscript
 
 BeginPackage["TeXmacsWolfram`"]
-InputPrompt::usage        = "Generate a list of objects to print as input prompt";
-Prelude::usage            = "Prelude message";
+Prelude::usage            = "Print prelude message";
 TmRepl::usage             = "Receive something as prompt, then read-eval-print";
 TmFormat::usage           = "Format an expression to an output string";
 TmOut1::usage             = "Write arguments to stdout";
@@ -106,12 +105,11 @@ tmBegin[] := WriteString[stdout, dataBegin, "verbatim: "]
 tmEnd[] := WriteString[stdout, dataEnd]
 
 
-InputPrompt[i_] := TmObj["latex:",
-                         TmObj["prompt# ","\\pink In[", ToString[i], "]:= {}"]]
+InputPrompt[i_] :=
+  TmObj["latex:", TmObj["prompt# ","\\pink In[", ToString[i], "]:= {}"]]
 
-OutputPrompt[s_] := TmObj["latex:\\pink ", s]
 
-Prelude = {
+Prelude[] := TmOut1[{
   TmObj["verbatim:", "Wolfram-lang plugin for GNU ",
         TmObj["texmacs:", "<text|<TeXmacs>>"],"
 Created by Hammer Hu, implemented in Wolfram, named mma by default
@@ -119,7 +117,7 @@ For more info, see "],
   TmObj["texmacs:", "<hlink|\
 https://github.com/hammerfunctor/tm-mathematica.git|\
 https://github.com/hammerfunctor/tm-mathematica.git>"]
-  }
+  }]
 
 (* Format the output *)
 
@@ -137,7 +135,8 @@ TmFormat[t_]           := TmObj["latex:", "$",ToString[t, tmOutputForm],"$"]
 
 fmtImage[imgFmt_String, g_] :=
   Module[
-    {sdata,shexdata,tree},
+    {sdata,shexdata,tree}
+  ,
     sdata = ExportString[g,imgFmt];
     ext = Switch[imgFmt,
                  "EPS", "eps",
@@ -145,7 +144,8 @@ fmtImage[imgFmt_String, g_] :=
                  "PDF", "pdf"];
     shexdata = StringJoin[IntegerString[#, 16, 2] & /@ ToCharacterCode[sdata]]; (* pad it to length 2 !!! *)
     (* construct the tree *)
-    tree = StringJoin["<image|<tuple|<#",shexdata,">|", CreateUUID["mma-output-"]<>"."<>ext ,">|",tmImageWidth,"|||>"];
+    tree = StringJoin["<image|<tuple|<#",shexdata,">|",
+                      CreateUUID["mma-output-"]<>"."<>ext ,">|",tmImageWidth,"|||>"];
     TmObj["texmacs: ", tmEscape[tree]]
   ]
 
@@ -156,11 +156,12 @@ magicLineQ[line_String] := (
   If[And[StringStartsQ[StringTrim[line,RegularExpression["^ *"]],"% "],
          StringContainsQ[line,"-width"]],
      tmErr1["% now represents previous expressions, use `(** width:400px **)' as the magic line"]];
-  StringMatchQ[StringTrim@line,mlpat])
+  StringMatchQ[StringTrim@line,mlpat]
+  )
 
 magicLine[line_String] :=
   Module[
-    {line1, pat1, pairs, mlparams=tmSetting},
+    {line1, pat, pairs, mlparams=tmSetting},
     line1 = StringCases[StringTrim@line, mlpat -> "$1"][[1]];
 
     pat = RegularExpression["([a-zA-Z0-9]+)\\s*:\\s*([a-zA-Z0-9.]+)"];
@@ -176,41 +177,49 @@ emptyQ[x_Symbol] := SameQ[x, Null]
 emptyQ[x_String] := SameQ[x, ""]
 emptyQ[x_] := SameQ[ToString[x], ""]
 
-InCmdArgs[arg_] := Or[MemberQ[$ScriptCommandLine,arg],MemberQ[$CommandLine,arg]]
+InCmdArgs[arg_] := Or[MemberQ[$ScriptCommandLine,arg], MemberQ[$CommandLine,arg]]
 tmDebug[input_] := If[InCmdArgs["MMA_DEBUG"], tmErr1[input]];
-tmDebug1[debug_, input_] := If[SameQ[debug,"true"], tmErr1["debug: " <> input]];
+tmDebug[debug_, input_] := If[SameQ[debug,"true"], tmErr1[input]];
 
 inputind = 1;
 
+
 resolvepacket[InputNamePacket[s_]] :=
-  (inputind = StringCases[s,RegularExpression["In\\[(.*)\\]"]->"$1"][[1]] // Interpreter["Number"])
+  (inputind = Interpreter["Number"] @@ StringCases[s,RegularExpression["In\\[(.*)\\]"]->"$1"])
 
 resolvepacket[OutputPair[OutputNamePacket[s_],_[e_]]] :=
-  TmOut1[TmObj["latex:\\pink ", onfilter[s,e]], TmObj["verbatim:", "\n"]]
+  TmOut1[TmObj["latex:\\pink ", onfilter[s,e]],
+         TmObj["verbatim:", "\n"]]
 
-resolvepacket[MsgPair[_MessagePacket, TextPacket[t_]]] := tmErr1[t]
-resolvepacket[TextPacket[t_]] := TmOut1[t]
+resolvepacket[MsgPair[_MessagePacket, TextPacket[t_]]] :=
+  tmErr1[t]
+
+resolvepacket[TextPacket[t_]] :=
+  TmOut1[t]
 
 
-flush[inbuf_List, next_String, exprnum_] := Module[
-  {inbuf1, buf},
-  (* tmErr1[inbuf]; *)
-  inbuf1 = {Sequence@@inbuf, next, "\n"};
-  buf = StringReplace[StringJoin[inbuf1], tmInputConv];
-  (* tmDebug1["true", buf]; *)
-  If[SyntaxQ[buf],
-     LinkWrite[tmLink, EnterExpressionPacket[ToExpression[buf, StandardForm, TmHoldExpr]]];
-     {exprnum + 1, {}},
-     {exprnum, inbuf1}
+flush[inbuf_List, next_String, exprnum_] :=
+  Module[
+    {inbuf1, buf}
+  ,
+    (* tmErr1[inbuf]; *)
+    inbuf1 = {Sequence @@ inbuf, next, "\n"};
+    buf = StringReplace[StringJoin[inbuf1], tmInputConv];
+    (* tmDebug["true", buf]; *)
+    If[SyntaxQ[buf],
+       LinkWrite[tmLink, EnterExpressionPacket[ToExpression[
+         buf, StandardForm, TmHoldExpr]]];
+       {exprnum + 1, {}}
+     ,
+       {exprnum, inbuf1}
+    ]
   ]
-]
-
-
 
 (* REPL loop *)
 TmRepl[] :=
   Module[
-    {setting, widthTemp, next, inbuf={}, exprnum=0, results={}, debug},
+    {setting, widthTemp, next, inbuf={}, exprnum=0, results={}, debug}
+  ,
 
     TmOut1[InputPrompt[inputind]];
     next = InputString[""];
@@ -234,11 +243,10 @@ TmRepl[] :=
     (* input ends, now outputs *)
     tmBegin[];
 
-    (* tmDebug1["true",exprnum]; *)
     While[
       exprnum > 0,
       next = LinkRead[tmLink];
-      (* tmDebug1["true", next]; *)
+      tmDebug[debug, next];
       Switch[
         next,
         _InputNamePacket, exprnum--; AppendTo[results, next],
@@ -247,12 +255,12 @@ TmRepl[] :=
         _TextPacket, AppendTo[results, next]
       ];
     ];
-    (* tmDebug1[debug, results]; *)
 
     Block[
       {tmImageWidth=widthTemp,
        onfilter=If[Length[Position[results,OutputNamePacket]]==1,
-                   TmFormat[#2]&, {#1,TmFormat[#2]}&]},
+                   TmFormat[#2]&, {#1,TmFormat[#2]}&]}
+    ,
       Do[resolvepacket[r],{r,results}]
     ];
     tmEnd[];
@@ -260,11 +268,11 @@ TmRepl[] :=
 
 End[]
 
-Protect[InputPrompt,Prelude,TmRepl,TmFormat,TmOut1,InCmdArgs,TmHoldExpr]
+Protect[Prelude,TmRepl,TmFormat,TmOut1,InCmdArgs,TmHoldExpr,TmMsg]
 EndPackage[]
 
 If[InCmdArgs["TEXMACS"],
-   TmOut1[Prelude]; While[True, TmRepl[]],
+   Prelude[]; While[True, TmRepl[]],
    While[True,
          ToExpression[Input["Enter:"]]
    ]
