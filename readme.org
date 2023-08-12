@@ -5,7 +5,64 @@ This project provides the functionality to use [[https://texmacs.org][GNU TeXmac
 #+CAPTION: Some demos!
 [[./demo.png]]
 
+** Usage
+
+To use this package, you need to confirm executable =wolframscript= or =wolfram=
+locates in one of you system search paths. The disired directory on windows may
+be something like =C:\Program Files\Wolfram Research\Mathematica\13.0\= for
+Mathematica or =C:\Program Files\Wolfram Research\WolframScript\= for
+WolframEngine (enable the extra component wolframscript when installing
+WolframEngine). When you have the directory, add it to environment variable
+=Path= on Windows or shell variable =PATH= on *nix.
+
+After that, put this package in your plugin directory inside TeXmacs home path
+and name it as =mma=. By default it should be =$HOME/.TeXmacs/plugins= on Linux
+and macos, and =%AppData%/Roaming/TeXmacs/plugins= on windows. You can either
+=git clone= or download a zip packed directory from the github interface.
+
+*** git
+If you use =git=
+
+For Linux/macos:
+#+begin_src sh
+cd $HOME/.TeXmacs/plugins #
+git clone https://github.com/hammerfunctor/tm-mathematica mma
+#+end_src
+
+For windows
+#+begin_src sh
+cd %AppData%/Roaming/TeXmacs/plugins
+git clone https://github.com/hammerfunctor/tm-mathematica mma
+cd mma && git checkout wolframscript
+#+end_src
+
+*** zip download
+Download this package as a zip file, put it in the the directory just mentioned,
+change the name of dir to =mma=, and you are done.
+
+*** Troubleshooting
+On windows once you properly set the environment variable =Path=, TeXmacs will
+correctly recognize this plugin.
+
+For macos and Linux the =PATH= TeXmacs is aware of is a little tricky.  When you
+login, your user login-shell init file, =$HOME/.zprofile=, =$HOME/.profile= or
+=$HOME/.bash_profile= depend on your desktop manager and login shell, should be
+executed.
+
+On Linux just set your =PATH= variable in one of that respected by your system,
+and everything is okay.
+
+On macos TeXmacs is aware of the existence of =$HOME/.zprofile= if you start it
+from terminal, while not if you run texmacs from spotlight search. One
+workaround is to link =/usr/local/bin/wolframscript to
+=/path/to/wolframscript=, which is always in =PATH=.
+
+
 **  UPDATE
+
+*** 2023/08/12
+=wolframscript= now merged into =main=, and original =main= written in cpp is
+now left in the branch =cpp=.
 
 *** 2023/08/01
 1. *Breaking change*: Magic line style changed from
@@ -22,7 +79,6 @@ This project provides the functionality to use [[https://texmacs.org][GNU TeXmac
    prompt, whose index is the same as the input prompt index, won't be printed
    when there's a single output.
 
-   
 *** 2023/07/30
 Adapt [[https://github.com/XmacsLabs/mogan][mogan]].
 *** 2023/03/05
@@ -74,66 +130,7 @@ Now =%= like that in notebook frontend is supported, and, the logic of format an
 is clarified. (Though it's possible to write =%12=, I personally recommend you not to do like this,
 since each time codes are rerun, indices will most probably change.)
 
-** Installation and Use
 
-There are two versions of this plugin. One (~main~ branch) is implemented in cpp utilizing the WSTP interface,
-the other (~wolframscript~ branch) is implemented in Wolfram language and run as a wolfram script. The
-first one has interactive features like ~%~ as last output, while the second one works out of the box
-and require no cpp compilation toolchain.
-
-Check ~wolframscript~ branch for details.
-
-TeXmacs use the dirname in ~plugins~ to mark the name of a plugin. To use two branches simultaneously, you
-need to hold one copy of files and manually rename something. Say you will name it ~myplugin~, confirm:
-1. dirname in ~$HOME/.TeXmacs/plugins~ to be ~myplugin~ (mma by default)
-2. filename in ~$HOME/.TeXmacs/plugins/myplugin/progs~ to be init-myplugin.scm (init-mma.scm by default)
-3. names of functions in ~init-myplugin.scm~ (look into the code and you will figure out what to do)
-*** ~main~ branch
-
-*NOTE: This one is tested against ArchLinux and OSX 10.15.*
-
-To use this plugin, you need compile it manually since it rely on the WSTP library shipped with your Wolfram.
-C++ compilation toolchain is required.
-Confirm the directory of ~WolframKernel~ is in ~PATH~,  type ~which WolframKernel~ to check it. Then:
-
-#+begin_src sh
-cd $HOME/.TeXmacs/plugins/
-git clone https://github.com/hammerfunctor/tm-mathematica mma && cd mma
-./build.sh # or: `WOLFRAM_PATH=/path/to/wolframproduct ./build`
-#+end_src
-
-If no error is reported, then next time when you start TeXmacs, this plugin will be available.
-
-*** ~wolframscript~ branch
-On Windows, you need to add the directory of ~wolframscript.exe~ to environment variable ~Path~. It may be like
-~C:\Program Files\Wolfram Research\Mathematica\13.0\~ for Mathematica
-and ~C:\Program Files\Wolfram Research\WolframScript\~ for WolframEngine
-(select to enable the extra component wolframscript when installing WolframEngine).
-
-Then enter following in CMD (~git~ is needed. If you don't have git, click in github page to switch to ~wolframscript~
-branch, download it as a zip file and put it in your TeXmacs plugin directory and name the directory ~mma~)
-#+begin_src sh
-cd %AppData%/Roaming/TeXmacs/plugins
-git clone https://github.com/hammerfunctor/tm-mathematica mma
-cd mma && git checkout wolframscript
-#+end_src
-
-On Linux and macOS, find the directory of ~wolframscript~ and add it to ~PATH~. Then
-#+begin_src sh
-cd $HOME/.TeXmacs/plugins
-git clone https://github.com/hammerfunctor/tm-mathematica mma
-cd mma && git checkout wolframscript
-#+end_src
-
-**** Troubleshooting
-On Windows once you add the dir to environment variable PATH, texmacs will correctly recognize this plugin
-after it read PATH.
-
-For OSX and Linux the ~PATH~ texmacs get to know is a bit tricky. On Linux the login-shell init file, say =$HOME/.zprofile=
-(if you use zsh) is perhaps respected. You can add one line =export PATH=$PATH:/path/to/wolframscript= to your ~.zprofile~
-(or =.profile= if you don't use zsh).
-On OSX texmacs is aware of the existence of ~.zprofile~ if you start it from terminal, while not if you run texmacs from
-spotlight search. One workaround is to link ~/usr/local/bin/wolframscript~ to ~/path/to/wolframscript~, which is always in ~PATH~.
 
 ** Have fun!
 
