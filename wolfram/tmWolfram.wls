@@ -135,7 +135,7 @@ TmFormat[t_]           := TmObj["latex:", "$",ToString[t, tmOutputForm],"$"]
 
 fmtImage[imgFmt_String, g_] :=
   Module[
-    {sdata,shexdata,tree}
+    {sdata,shexdata,tree,ext}
   ,
     sdata = ExportString[g,imgFmt];
     ext = Switch[imgFmt,

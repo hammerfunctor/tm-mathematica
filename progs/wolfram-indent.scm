@@ -49,7 +49,7 @@
 
 (define (standard-indent? s)
   (with indent?
-      (lambda (x) (or (== s x) (string-ends? (string-trim-right s) (string-append " " x))))
+      (lambda (x) (or (== s x) (string-ends? (tm-string-trim-right s) (string-append " " x))))
     (not (not (list-find wolfram-indenters indent?)))))
 
 (define (reference-row-bis row)
