@@ -33,7 +33,6 @@ For windows
 #+begin_src sh
 cd %AppData%/Roaming/TeXmacs/plugins
 git clone https://github.com/hammerfunctor/tm-mathematica mma
-cd mma && git checkout wolframscript
 #+end_src
 
 *** zip download
@@ -45,17 +44,18 @@ On windows once you properly set the environment variable =Path=, TeXmacs will
 correctly recognize this plugin.
 
 For macos and Linux the =PATH= TeXmacs is aware of is a little tricky.  When you
-login, your user login-shell init file, =$HOME/.zprofile=, =$HOME/.profile= or
-=$HOME/.bash_profile= depend on your desktop manager and login shell, should be
-executed.
+login, your login shell init file, =$HOME/.zprofile=, =$HOME/.profile= or
+=$HOME/.bash_profile= depending the way you start your desktop environment and
+your login shell, should be executed.
 
-On Linux just set your =PATH= variable in one of that respected by your system,
-and everything is okay.
+On Linux just set your =PATH= variable in one of the login-shell init files
+respected by your system, and everything is okay.
 
 On macos TeXmacs is aware of the existence of =$HOME/.zprofile= if you start it
-from terminal, while not if you run texmacs from spotlight search. One
-workaround is to link =/usr/local/bin/wolframscript to
-=/path/to/wolframscript=, which is always in =PATH=.
+from terminal, while not if you run texmacs from spotlight search. I'm no expert
+of Apple stuff, and the only workaround I can come up with is to link, say,
+=/usr/local/bin/wolframscript= to =/path/to/wolframscript=, which is always in
+=PATH=.
 
 
 **  UPDATE
