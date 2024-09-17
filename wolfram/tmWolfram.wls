@@ -111,11 +111,10 @@ InputPrompt[i_] :=
 
 Prelude[] := TmOut1[{
   TmObj["verbatim:", "Wolfram-lang plugin for GNU ",
-        TmObj["texmacs:", "<text|<TeXmacs>>"],"
-Created by Hammer Hu, implemented in Wolfram, named mma by default
-For more info, see "],
+        TmObj["texmacs:", "<text|<TeXmacs>>"],". Created by Hammer Hu, implemented in
+Wolfram language. For more info, see "],
   TmObj["texmacs:", "<hlink|\
-https://github.com/hammerfunctor/tm-mathematica.git|\
+github.com/hammerfunctor/tm-mathematica.git|\
 https://github.com/hammerfunctor/tm-mathematica.git>"]
   }]
 
