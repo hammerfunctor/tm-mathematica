@@ -25,7 +25,9 @@
 
 (cond-expand
  ;; regexp not working so far
- (s7 (define (mma-pre-serialize . args) (apply pre-serialize args)))
+ (s7 (begin
+       (define (mma-pre-serialize . args) (apply pre-serialize args))
+       (define (getenv key) (get-environment-variable key))))
  (else
   (use-modules (mw-converter))
   (define (mma-pre-serialize-rec lan serialized this rest)
