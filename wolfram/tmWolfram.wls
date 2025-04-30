@@ -44,6 +44,7 @@ LinkRead[tmLink]
 
 SetAttributes[TmHoldExpr, HoldAllComplete]
 LinkWrite[tmLink, Unevaluated[EvaluatePacket[TmHoldExpr[e_] := e]]]
+LinkWrite[tmLink, Unevaluated[EvaluatePacket[Protect[TmHoldExpr]]]]
 LinkRead[tmLink]
 
 
@@ -273,6 +274,7 @@ EndPackage[]
 If[InCmdArgs["TEXMACS"],
    Prelude[]; While[True, TmRepl[]],
    While[True,
-         ToExpression[Input["Enter:"]]
+         TmRepl[]
+         (* Print[ToExpression[Input["Enter:"]]] *)
    ]
 ]
