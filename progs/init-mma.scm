@@ -71,7 +71,7 @@
 
 (define (mma-serialize lan t)
   (when (debug?) (display* "[t]: " t "\n"))
-  (with u (pre-serialize-1 lan t)
+  (with u (pre-serialize lan t)
     (when (debug?) (display* "[u]: " u "\n"))
     (with s (texmacs->code (stree->tree t) "SourceCode")
       ;; we don't use the pre-serialize-d version, which cause problem when
