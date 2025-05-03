@@ -60,25 +60,23 @@
 
 (define (mma-pre-serialize . args) (apply pre-serialize args))
 
-;; (define (pre-serialize-1 lan t)
-;;   (cond ((func? t 'document 1) (map (lambda (x) (pre-serialize-1 lan x)) (cdr t)))
-;;         ((func? t 'math 1)
-;;          (pre-serialize lan (plugin-math-input (list 'tuple lan (cadr t)))))
-;;         ;;((func? t 'concat 1) )
-;;         (else t)))
+(define (pre-serialize-1 lan t)
+  (cond ((func? t 'document 1) (pre-serialize-1 lan (cadr t)))
+        ((func? t 'math 1)
+         (pre-serialize lan (plugin-math-input (list 'tuple lan (cadr t)))))
+        ((func? t 'concat) `(concat ,@(map (lambda (x) (pre-serialize-1 lan x)) (cdr t))))
+        ((func? t 'document) `(document ,@(map (lambda (x) (pre-serialize-1 lan x)) (cdr t))))
+        (else t)))
 
 (define (debug?) (== (getenv "MMA_DEBUG") "1"))
 
 (define (mma-serialize lan t)
-  (when (debug?) (display* "[t]: " t "\n"))
-  (with u (pre-serialize lan t)
+  (when (debug?)
+    (display* "[t]: " t "\n")
+    )
+  (with u (pre-serialize-1 lan t)
     (when (debug?) (display* "[u]: " u "\n"))
-    (with s (texmacs->code (stree->tree t) "SourceCode")
-      ;; we don't use the pre-serialize-d version, which cause problem when
-      ;; (concat text math) appears in (document ...). Specifically, α appears
-      ;; to be alpha for (document (math "<alpha>")), and to be α itself for
-      ;; (document (concat text (math "<alpha>"))). This makes expressions
-      ;; inconsistent.
+    (with s (texmacs->code (stree->tree u) "SourceCode")
       (when (debug?) (display* "[s]: " s "\n"))
       (string-append s "\nEndOfFile\n"))))
 
