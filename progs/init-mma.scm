@@ -102,7 +102,8 @@
   (:launch ,(mma-launcher))
   (:tab-completion #t)
   (:session "mma")
-  (:script "mma"))
+  ;;(:script "mma") what this is for?
+  )
 
 
 (when (supports-mma?)
